@@ -19,7 +19,6 @@ check_point = 0
 count = 1
 
 while True:
-    d_map[a][b] = 1
 
     # 방향 전환
     d = (d-1) % len(direction)
@@ -33,7 +32,8 @@ while True:
         b = nb
         check_point = 0
         count = count + 1
-
+        d_map[na][nb] = 1
+        continue
 
     else:
         check_point = check_point + 1
@@ -42,14 +42,14 @@ while True:
         na = a - direction[d][0]
         nb = b - direction[d][1]
 
-        if game_maps[na][nb] == 1:
-            break
-
-        # if game_maps[na][nb] == 0:
-        #     a = na
-        #     b = nb
-        #     check_point = 0
-        # else:
+        # if game_maps[na][nb] == 1:
         #     break
+
+        if game_maps[na][nb] == 0:
+            a = na
+            b = nb
+            check_point = 0
+        else:
+            break
 
 print(count)

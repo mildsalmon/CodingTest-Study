@@ -27,17 +27,22 @@ array = list(map(int, input().split()))
 
 start = 0
 end = max(array)
+count = 0
 
 while (start <= end):
+    print("start, end", start, end)
     mid = (start + end) // 2
     dduk_len = 0
     for i in array:
         if i > mid:
             dduk_len = dduk_len + (i - mid)
-    if dduk_len > m:
+    if dduk_len < m:
+        end = mid - 1
+    else:
         result = mid
         start = mid + 1
-    else:
-        end = mid - 1
+
+    count = count + 1
+    print("mid, dduck_len, result, count", mid, dduk_len, result, count)
 
 print(result)

@@ -65,6 +65,8 @@
     # 1 바다
     # 0 육지
 
+# 29분 5초
+
 n, m = list(map(int, input().split()))
 a, b, d = list(map(int, input().split()))
 game_map = []

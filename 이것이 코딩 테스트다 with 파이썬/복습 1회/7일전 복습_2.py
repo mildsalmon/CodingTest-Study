@@ -111,51 +111,57 @@ while True:
     if game_map[a][b] == 1:
         break
 
+    print(*check_game_map, sep='\n')
+    print()
+
 print(count)
 
 # -----------------
 
-n, m = list(map(int, input().split()))
-a, b, d = list(map(int, input().split()))
-game_map = []
-check_game_map = []
-
-for i in range(n):
-    row_map = list(map(int, input().split()))
-    game_map.append(row_map)
-    check_game_map.append(row_map)
-
-ds = ((-1, 0),
-      (0, 1),
-      (1, 0),
-      (0, -1))
-
-count = 1
-
-while True:
-    print("a, b", a, b)
-    d_count = d_count + 1
-    dd = ds[d]
-    d = (d - 1) % 4
-    da = a + dd[0]
-    db = b + dd[1]
-
-    if da < 0 or da >= n or db < 0 or db >= m:
-        continue
-    else:
-        if game_map[da][db] == 1 or check_game_map[da][db] == 1:
-            if d_count == 4:
-                a = a - dd[0]
-                b = b - dd[1]
-
-        else:
-            check_game_map[da][db] = 1
-            d_count = 0
-            a = da
-            b = db
-            count = count + 1
-
-    if game_map[a][b] == 1:
-        break
-
-print(count)
+# n, m = list(map(int, input().split()))
+# a, b, d = list(map(int, input().split()))
+# game_map = []
+# check_game_map = []
+#
+# for i in range(n):
+#     row_map = list(map(int, input().split()))
+#     game_map.append(row_map)
+#     check_game_map.append(row_map)
+#
+# ds = ((-1, 0),
+#       (0, 1),
+#       (1, 0),
+#       (0, -1))
+#
+# count = 1
+#
+# while True:
+#     print("a, b", a, b)
+#     d_count = d_count + 1
+#     dd = ds[d]
+#     d = (d - 1) % 4
+#     da = a + dd[0]
+#     db = b + dd[1]
+#
+#     if da < 0 or da >= n or db < 0 or db >= m:
+#         continue
+#     else:
+#         if game_map[da][db] == 1 or check_game_map[da][db] == 1:
+#             if d_count == 4:
+#                 a = a - dd[0]
+#                 b = b - dd[1]
+#
+#         else:
+#             check_game_map[da][db] = 1
+#             d_count = 0
+#             a = da
+#             b = db
+#             count = count + 1
+#
+#     if game_map[a][b] == 1:
+#         break
+#
+#     print(*check_game_map, sep='\n')
+#     print()
+#
+# print(count)

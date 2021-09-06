@@ -47,14 +47,14 @@
 
 import time
 
-start = time.time()
+start_time = time.time()
 
 # n = int(input())
 # arrays = list(map(int, input().split()))
 n = 5
 # arrays = [1, 1, 1, 1, 1]
-# arrays = [4, 4, 4, 4, 4]
-arrays = [3, 2, 2, 2, 1]
+arrays = [4, 4, 4, 4, 4]
+# arrays = [3, 2, 2, 2, 1]
 
 arrays.sort(reverse=True)
 group = 0
@@ -72,9 +72,9 @@ while arrays:
     i += 1
 print(group)
 
-end = time.time()
+end_time = time.time()
 
-print(end-start)
+print(end_time - start_time)
 # 1시간 25분 25초 / pass / timeout /
 # 풀다가 풀다가 내가 만든 테스트 케이스를 통과하지 못해서 답지 코드를 봤다.
 # 그런데 답지 코드도 내가 만든 테스트 케이스에서 틀린 답을 준다.
@@ -88,14 +88,14 @@ print(end-start)
 # 5 / 1 2 4 3 1 => 2
 # 5 / 2 3 1 2 2 => 2
 
-start = time.time()
+start_time = time.time()
 
 # n = int(input())
 # arrays = list(map(int, input().split()))
 n = 5
 # arrays = [1, 1, 1, 1, 1]
-# arrays = [4, 4, 4, 4, 4]
-arrays = [3, 2, 2, 2, 1]
+arrays = [4, 4, 4, 4, 4]
+# arrays = [3, 2, 2, 2, 1]
 
 arrays.sort(reverse=True)
 group = 0
@@ -106,7 +106,7 @@ del_array = []
 for i in range(len(arrays)):
     if start == count:
         start = arrays[i]
-        ar.append(start)
+        # ar.append(start)
         if len(arrays) - len(del_array) >= start:
             group += 1
             count = 0
@@ -115,11 +115,42 @@ for i in range(len(arrays)):
 
 print(group)
 
-end = time.time()
+end_time = time.time()
 
-print(end-start)
+print(end_time - start_time)
 # 시간 복잡도 개선판.
 # 첫 번째 코드는 pop(i)로 인해 시간복잡도가 O(N^2)이 된다. (while문 N * pop(i) N)
 # 따라서 밑에 코드처럼 작성하면 시간복잡도가 O(N)이 된다. (append는 O(1)이므로)
 
-# time 함수로 시간을 찍어보면서 몇 번 돌려봤는데, 테스트케이스의 길이가 작아서 그런지, 소요 시간이 완전히 똑같이 나온다.
+start_time = time.time()
+
+# n = int(input())
+# arrays = list(map(int, input().split()))
+n = 5
+# arrays = [1, 1, 1, 1, 1]
+arrays = [4, 4, 4, 4, 4]
+# arrays = [3, 2, 2, 2, 1]
+
+arrays.sort(reverse=True)
+group = 0
+start = [0]
+count = 0
+ar = []
+del_array = []
+for i in range(len(arrays)):
+    if start[-1] == count:
+        start.append(arrays[i])
+        # ar.append(start)
+        if len(arrays) >= sum(start):
+            group += 1
+            count = 0
+    # del_array.append(arrays[i])
+    count += 1
+
+print(group)
+
+end_time = time.time()
+
+print(end_time - start_time)
+
+# del 연산을 빼도 잘 작동할꺼 같아서 빼고 만들어봤다.

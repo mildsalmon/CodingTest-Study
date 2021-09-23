@@ -135,6 +135,6 @@ for i in range(n):
     temp = list(map(int, input().split()))
     graph.append(temp)
 
-bfs(0, graph)
+dfs(0, graph)
 
 print(answer)

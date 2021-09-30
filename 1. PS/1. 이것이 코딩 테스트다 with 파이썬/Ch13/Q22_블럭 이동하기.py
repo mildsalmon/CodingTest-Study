@@ -56,12 +56,12 @@
 #
 # print(solution([[0, 0, 0, 1, 1],[0, 0, 0, 1, 0],[0, 1, 0, 1, 1],[1, 1, 0, 0, 1],[0, 0, 0, 0, 0]]))
 
-# 최고 속도 버전
+# 주어진 조건대로 구현하다보니 코드가 난잡한 버전 / 속도는 빠름
 # 대신, 코드 중복이 심함
 # 이건 bfs가 아니라 구현이야
 
-# from collections import deque
-#
+from collections import deque
+
 # def solution(board):
 #     # move_check_board = [i[:] for i in board]
 #

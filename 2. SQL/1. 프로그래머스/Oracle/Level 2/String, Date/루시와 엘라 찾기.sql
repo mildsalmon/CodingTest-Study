@@ -1,0 +1,10 @@
+-- 코드를 입력하세요
+SELECT ANIMAL_ID, NAME, SEX_UPON_INTAKE
+FROM ANIMAL_INS
+WHERE INITCAP(NAME) IN (INITCAP('LUCY'),
+               INITCAP('ELLA'),
+               INITCAP('PICKLE'),
+               INITCAP('ROGAN'),
+               INITCAP('SABRINA'),
+               INITCAP('MITTY'))
+ORDER BY ANIMAL_ID;

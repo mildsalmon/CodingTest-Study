@@ -52,7 +52,7 @@
 
 #########################################
 
-#n = int(input())
+# n = int(input())
 # array = []
 #
 # for i in range(n):
@@ -79,6 +79,56 @@
 
 ################################
 
+# n = int(input())
+# array = []
+#
+# for i in range(n):
+#     temp = list(map(int, input().split()))
+#
+#     array.append(temp)
+#
+# # array.append([0, 0])
+#
+# dp = [0] * (n + 1)
+#
+# for i in range(n - 1, -1, -1):
+#     next_day = array[i][0] + i
+#
+#     if next_day <= n:
+#         dp[i] = max(dp[next_day] + array[i][1], max(dp))
+#     else:
+#         dp[i] = max(dp)
+#
+# print(max(dp))
+#
+# #################################
+#
+# n = int(input())
+# array = []
+#
+# for i in range(n):
+#     temp = list(map(int, input().split()))
+#
+#     array.append(temp)
+#
+# # array.append([0, 0])
+#
+# dp = [0] * (n+1)
+# answer = 0
+#
+# for i in range(n-1, -1, -1):
+#     next_day = array[i][0] + i
+#
+#     if next_day <= n:
+#         dp[i] = max(dp[next_day] + array[i][1], answer)
+#         answer = dp[i]
+#     else:
+#         dp[i] = answer
+#
+# print(max(dp))
+
+######################################
+
 n = int(input())
 array = []
 
@@ -95,34 +145,6 @@ for i in range(n - 1, -1, -1):
     next_day = array[i][0] + i
 
     if next_day <= n:
-        dp[i] = max(dp[next_day] + array[i][1], max(dp))
-    else:
-        dp[i] = max(dp)
-
-print(max(dp))
-
-#################################
-
-n = int(input())
-array = []
-
-for i in range(n):
-    temp = list(map(int, input().split()))
-
-    array.append(temp)
-
-# array.append([0, 0])
-
-dp = [0] * (n+1)
-answer = 0
-
-for i in range(n-1, -1, -1):
-    next_day = array[i][0] + i
-
-    if next_day <= n:
-        dp[i] = max(dp[next_day] + array[i][1], answer)
-        answer = dp[i]
-    else:
-        dp[i] = answer
+        dp[i] = max(dp[next_day:]) + array[i][1]
 
 print(max(dp))

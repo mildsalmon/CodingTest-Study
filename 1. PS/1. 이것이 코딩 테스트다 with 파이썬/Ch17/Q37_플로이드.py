@@ -1,3 +1,12 @@
+"""
+Date    : 2021.11.23
+Update  : 2021.11.23
+Source  : Q37_플로이드.py
+Purpose : 플로이드 알고리즘을 사용하여 모든 도시의 최소 비용을 인접행렬로 구함
+Author  : 김학진 (mildsalmon)
+Email   : mildsalmon@gamil.com
+"""
+
 # 도시의 개수
 n = int(input())
 # 버스의 개수

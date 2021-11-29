@@ -33,7 +33,6 @@ def check_plan(plan, parent):
 
 # n = 여행지의 수, m = 여행 계획에 속한 도시의 수
 n, m = list(map(int, input().split()))
-graph = [[] for i in range(n)]
 
 # 부모 노드
 parent = [i for i in range(n)]
@@ -41,15 +40,10 @@ parent = [i for i in range(n)]
 for i in range(n):
     temp = list(map(int, input().split()))
 
-    # A지역에서 B지역으로 갈 수 있는 경우를 인접리스트 형식으로 저장
     for j in range(len(temp)):
+        # A지역에서 B지역으로 갈 수 있는 경우
         if temp[j] == 1:
-            graph[i].append(j)
-
-# 인접리스트를 순차적으로 접근하면서, 부모 노드가 다르다면, union
-for i in range(len(graph)):
-    for j in graph[i]:
-        if find_parent(parent, j) != find_parent(parent, i):
+            # 부모 노드가 다르다면, union
             union_parent(parent, i, j)
 
 plan = list(map(int, input().split()))

@@ -1,6 +1,6 @@
 """
-Date    : 2021.11.26
-Update  : 2021.11.26
+Date    : 2021.11.29
+Update  : 2021.11.29
 Source  : Q41_여행 계획.py
 Purpose : union-find 알고리즘으로 여행 계획이 가능한지를 판단한다.
 Author  : 김학진 (mildsalmon)

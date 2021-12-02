@@ -14,22 +14,28 @@ def union_parent(parent, a, b):
 
 n = int(input())
 
-planets = []
+planets_x = []
+planets_y = []
+planets_z = []
 tunnels = []
 parent = [i for i in range(n)]
 total_cost = 0
 
 for i in range(n):
-    x_a, y_a, z_a = list(map(int, input().split()))
+    x, y, z = list(map(int, input().split()))
 
-    if i >= 1:
-        for j in range(len(planets)):
-            x_b, y_b, z_b = planets[j]
+    planets_x.append((x, i))
+    planets_y.append((y, i))
+    planets_z.append((z, i))
 
-            cost = min(abs(x_a - x_b), abs(y_a - y_b), abs(z_a - z_b))
-            tunnels.append((cost, i, j))
+planets_x.sort()
+planets_y.sort()
+planets_z.sort()
 
-    planets.append((x_a, y_a, z_a))
+for i in range(n-1):
+    tunnels.append((planets_x[i+1][0] - planets_x[i][0], planets_x[i][1], planets_x[i+1][1]))
+    tunnels.append((planets_y[i+1][0] - planets_y[i][0], planets_y[i][1], planets_y[i+1][1]))
+    tunnels.append((planets_z[i+1][0] - planets_z[i][0], planets_z[i][1], planets_z[i+1][1]))
 
 tunnels.sort()
 

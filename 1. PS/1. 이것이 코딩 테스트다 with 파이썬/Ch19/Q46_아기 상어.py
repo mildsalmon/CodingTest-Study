@@ -1,78 +1,103 @@
 from collections import deque
 
-def search_minimum_distance(shark_pos, space):
-    """
-    상어가 모든 지점으로 가는 최단거리를 구함
-    :param shark_pos: 상어 현재 위치
-    :param space: 물고기 지도
-    :return: 최단거리 지도
-    """
-    global n
+class Area:
+    def __init__(self, n, space):
+        self.n = n
+        self.space = space
+        self.shark_pos = self.get_shark_pos()
+        self.ds = ((0, 1), (0, -1), (1, 0), (-1, 0))
 
-    ds = ((0, 1), (0, -1), (1, 0), (-1, 0))
 
-    x, y = shark_pos
-    q = deque()
-    q.append((x, y))
-    visited = [[-1] * n for _ in range(n)]
-    visited[x][y] = 0
+    def get_minimum_distance(self, shark_size):
+        """
+        상어가 모든 지점으로 가는 최단거리를 구함
+        :param shark_pos: 상어 현재 위치
+        :param space: 물고기 지도
+        :return: 최단거리 지도
+        """
+        x, y = self.shark_pos
 
-    while q:
-        x, y = q.popleft()
+        q = deque()
+        q.append((x, y))
+        distance_map = [[-1] * self.n for _ in range(self.n)]
+        distance_map[x][y] = 0
 
-        for d in ds:
-            dx = x + d[0]
-            dy = y + d[1]
+        while q:
+            x, y = q.popleft()
 
-            if 0 <= dx < n and 0 <= dy < n:
-                if visited[dx][dy] == -1 and space[dx][dy] <= shark_size:
-                    visited[dx][dy] = visited[x][y] + 1
-                    q.append((dx, dy))
+            for d in self.ds:
+                dx = x + d[0]
+                dy = y + d[1]
 
-    return visited
+                if 0 <= dx < n and 0 <= dy < n:
+                    if distance_map[dx][dy] == -1 and self.space[dx][dy] <= shark_size:
+                        distance_map[dx][dy] = distance_map[x][y] + 1
+                        q.append((dx, dy))
 
-def find_fish(minimum_distance_map):
-    """
-    상어가 먹을 수 있는 크기의 물고기를 찾는다.
-    만약, 동일한 크기의 물고기가 존재한다면, 우선순위를 (1. 위, 2. 왼쪽)로 정하고 물고기를 찾는다.
-    :param minimum_distance_map: 상어에서 모든 물고기까지 가는 최단거리 지도
-    :return:
-    """
-    global n
+        return distance_map
 
-    dist = 1e9
-    fish_x = 0
-    fish_y = 0
+    def get_shark_pos(self):
+        for i in range(n):
+            for j in range(n):
+                if self.space[i][j] == 9:
+                    self.shark_pos = (i, j)
+        return self.shark_pos
 
-    for i in range(n):
-        for j in range(n):
-            if minimum_distance_map[i][j] != -1 and 0 < space[i][j] < shark_size:
-                if minimum_distance_map[i][j] < dist:
-                    dist = minimum_distance_map[i][j]
-                    fish_x = i
-                    fish_y = j
+    def update_shark_pos(self, x, y, value):
+        self.space[x][y] = value
 
-    if dist != 1e9:
-        fish = [dist, fish_x, fish_y]
-        return fish
-    else:
-        return None
+    def get_space(self):
+        return self.space
 
-def eat_shark(eat, size):
-    """
-    상어가 물고기를 먹는 메소드
-    먹은 물고기 수가 상어 크기와 같다면, 상어 크기가 1 커진다.
-    :param eat:
-    :param size:
-    :return:
-    """
-    eat += 1
 
-    if eat == size:
-        eat = 0
-        size += 1
+class BabyShark:
+    def __init__(self, eat, size):
+        self.eat = eat
+        self.size = size
 
-    return eat, size
+
+    def find_fish(self, minimum_distance_map, space):
+        """
+        상어가 먹을 수 있는 크기의 물고기를 찾는다.
+        만약, 동일한 크기의 물고기가 존재한다면, 우선순위를 (1. 위, 2. 왼쪽)로 정하고 물고기를 찾는다.
+        :param minimum_distance_map: 상어에서 모든 물고기까지 가는 최단거리 지도
+        :return:
+        """
+        n = len(minimum_distance_map)
+
+        fish = [1e9, 0, 0]
+
+        for i in range(n):
+            for j in range(n):
+                if minimum_distance_map[i][j] != -1 and 0 < space[i][j] < self.size:
+                    if minimum_distance_map[i][j] < fish[0]:
+                        fish[0] = minimum_distance_map[i][j]
+                        fish[1] = i
+                        fish[2] = j
+
+        if fish[0] != 1e9:
+            return fish
+        else:
+            return None
+
+    def eat_shark(self):
+        """
+        상어가 물고기를 먹는 메소드
+        먹은 물고기 수가 상어 크기와 같다면, 상어 크기가 1 커진다.
+        :param eat:
+        :param size:
+        :return:
+        """
+        self.eat += 1
+
+        if self.eat == self.size:
+            self.eat = 0
+            self.size += 1
+
+        return self.eat, self.size
+
+    def get_size(self):
+        return self.size
 
 if __name__ == "__main__":
     n = int(input())
@@ -84,22 +109,22 @@ if __name__ == "__main__":
         temp = list(map(int, input().split()))
         space.append(temp)
 
-        for j in range(n):
-            if temp[j] == 9:
-                shark_pos = (i, j)
-
     time = 0
 
+    area = Area(n, space)
+    baby_shark = BabyShark(shark_eat, shark_size)
+
     while True:
-        space[shark_pos[0]][shark_pos[1]] = 0
+        shark_pos = area.get_shark_pos()
+        area.update_shark_pos(shark_pos[0], shark_pos[1], 0)
 
-        minimum_distance_map = search_minimum_distance(shark_pos, space)
-        fish = find_fish(minimum_distance_map)
-
+        minimum_distance_map = area.get_minimum_distance(baby_shark.get_size())
+        fish = baby_shark.find_fish(minimum_distance_map, area.get_space())
+        # print(fish)
         if fish is not None:
             time += fish[0]
-            shark_pos = (fish[1], fish[2])
-            shark_eat, shark_size = eat_shark(shark_eat, shark_size)
+            area.update_shark_pos(fish[1], fish[2], 9)
+            shark_eat, shark_size = baby_shark.eat_shark()
         else:
             break
 

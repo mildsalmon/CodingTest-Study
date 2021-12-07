@@ -1,3 +1,12 @@
+"""
+Date    : 2021.12.07
+Update  : 2021.12.07
+Source  : Q46_아기 상어.py
+Purpose : bfs를 이용하여 구현하는 문제
+Author  : 김학진 (mildsalmon)
+Email   : mildsalmon@gamil.com
+"""
+
 from collections import deque
 
 class Area:

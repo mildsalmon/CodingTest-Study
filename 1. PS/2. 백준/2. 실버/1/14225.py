@@ -15,15 +15,17 @@ def dfs(answer, array, depth, partial_sum):
     answer.append(partial_sum)
 
     dfs(answer, array, depth+1, partial_sum-array[depth])
-    # if partial_sum in answer:
-    #     return
     dfs(answer, array, depth+1, partial_sum)
 
 def check(answer):
-    for i in range(1, max(answer) + 1):
+    # set으로 강제형변환을 for문 안에서 반복해주면 시간복잡도가 오래걸린다.
+    # 대충 생각했을때는 얼마 안걸리겠지 싶었는데, 이것때문에 시간초과가 발생했다.
+    max_value = max(answer)
+    answer = set(answer)
+    for i in range(1, max_value+1):
         if i not in answer:
             return i
-    return max(answer)+1
+    return max_value+1
 
 n = int(input())
 array = list(map(int, input().split()))

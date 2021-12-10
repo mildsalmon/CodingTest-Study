@@ -31,147 +31,104 @@ Email   : mildsalmon@gamil.com
         # 이동하던 중 칸이 없으면 집으로 돌아감 ==> 이거를 초기 시작위치인 0,0으로 돌아간다고 이해하고 풀었음
 
 # 상어가 집으로 간 후에는 물고기가 다시 움직임 -> 반복
-
-from collections import deque
 import copy
 
-# def bfs(x, y):
-#     new_q = deque()
-#     # 방향 좌표 먹은거 반환
-#     d = ds[fishs[x][y][1]]
-#     dx = x + d[0]
-#     dy = y + d[1]
-#
-#     if 0 <= dx < n and 0 <= dy < n:
-#         if fishs[dx][dy][0] != 0 and fishs[dx][dy][0] != 99:
-def bfs(array, x, y):
-    q = deque()
-    # shark_eat = 0
+def fish_move(fishs):
+    """
+    물고기 이동 코드
+    :param fishs:
+    :return:
+    """
+    fish_moved = [False] * (n*n+1)
 
-    # shark_move = [0, 0, 0, 0]
-    for i in range(1, n):
-        d = ds[fishs[x][y][1]]
-        dx = x + d[0] * i
-        dy = y + d[1] * i
-
-        if 0 <= dx < n and 0 <= dy < n:
-            # 물고기가 없는칸 제외
-            if fishs[dx][dy][0] != 0 and fishs[dx][dy][0] != 99:
-                q.append((dx, dy))
-        else:
-            break
-
-    if len(q) == 0:
-        # 상어가 지금까지 먹은 먹이 합
-        next_fish = [fishs[x][y][0], x, y, fishs[x][y][1]]
-        # eat_fish = [x, y]
-
-        return next_fish #, eat_fish
-
-    next_fishs = []
-    eat_fishs = []
-    # temp_fishs = []
-
-    while q:
-        nx, ny = q.popleft()
-        next_fish = bfs(nx, ny)
-
-        next_fishs.append(next_fish)
-        # temp_fishs.append(eat_fish)
-
-    next_fish = next_fishs[0]
-
-    for i in range(1, len(next_fishs)):
-        if next_fishs[i][0] > next_fishs[i-1][0]:
-            next_fish = next_fishs[i]
-
-    next_fish[0] += fishs[x][y][0]
-    fishs[next_fish[1]][next_fish[2]][0] = 0
-    next_fish[1] = x
-    next_fish[2] = y
-    # eat_fishs.append(next_fish)
-
-    return next_fish#, eat_fishs
-
-n = 4
-
-fishs = []
-
-for i in range(n):
-    temp = list(map(int, input().split()))
-
-    fish = []
-    for j in range(n):
-        fish.append([temp[j*2], temp[j*2+1]-1])
-    fishs.append(fish)
-
-ds = ((-1, 0), # 상
-      (-1, -1), # 대 (왼상)
-      (0, -1), # 왼
-      (1, -1), # 대 (왼하)
-      (1, 0), # 하
-      (1, 1), # 대 (오하)
-      (0, 1), # 오
-      (-1, 1)) # 대 (오상)
-
-ds_len = len(ds)
-
-shark_pos = (0, 0)
-shark_direction = fishs[0][0][1]
-shark_eat = 0
-shark_eat += fishs[0][0][0]
-
-while True:
-    fishs[0][0][0] = 99 # 상어
-
-    # 물고기 이동
-    moved_fish = [False] * (n*n + 1)
-
-    for k in range(1, n*n+1):
+    for k in range(1, n * n + 1):
         for i in range(n):
             for j in range(n):
-                if fishs[i][j][0] == k and not moved_fish[k]:
-                    for dk in range(ds_len):
-                        d = ds[(fishs[i][j][1] + dk) % ds_len]
+                if fishs[i][j][0] == k and not fish_moved[k]:
+                    for dk in range(len(ds)):
+                        next_pos = (fishs[i][j][1] + dk)%len(ds)
+                        d = ds[next_pos]
                         dx = i + d[0]
                         dy = j + d[1]
 
                         if 0 <= dx < n and 0 <= dy < n:
                             if fishs[dx][dy][0] != 99:
-                                fishs[i][j][1] = (fishs[i][j][1] + dk) % ds_len
+                                fishs[i][j][1] = next_pos
                                 fishs[i][j], fishs[dx][dy] = fishs[dx][dy], fishs[i][j]
-                                moved_fish[k] = True
+                                fish_moved[k] = True
+                                # print(*fishs, sep='\n')
+                                # print()
                                 break
 
-    # 상어 이동
-    fishs[shark_pos[0]][shark_pos[1]][0] = 0  # 상어 이동 준비
-    next_fish = bfs(shark_pos[0], shark_pos[1])
-    fishs[shark_pos[0]][shark_pos[1]][1] = next_fish[3]
-    # print(next_fish)
-    shark_eat += next_fish[0]
+def dfs(x, y, shark_eat, shark_direction, fishs):
+    """
+    상어 이동 코드드
+   :param x:
+    :param y:
+    :param shark_eat:
+    :param shark_direction:
+    :param fishs:
+    :return:
+    """
+    copy_fish = copy.deepcopy(fishs)
+    shark_eat += copy_fish[x][y][0]
+    copy_fish[x][y][0] = 99
+    fish_move(copy_fish)
+    eat_list = []
+    shark_eat_list = []
 
-    if next_fish[0] == 0 or (next_fish[1] == 0 and next_fish[2] == 0):
-        print(shark_eat)
-        break
-    # q = deque()
-    #
-    # # shark_move = [0, 0, 0, 0]
-    # for i in range(n):
-    #     d = ds[shark_direction]
-    #     dx = shark_pos[0] + d[0] * i
-    #     dy = shark_pos[1] + d[1] * i
-    #
-    #     if 0 <= dx < n and 0 <= dy < n:
-    #         # 물고기가 없는칸 제외
-    #         if fishs[dx][dy][0] != 0 and fishs[dx][dy][0] != 99:
-    #             q.append((dx, dy))
-    #     else:
-    #         break
-    #
-    # while q:
-    #     x, y = q.popleft()
-    #     bfs(x, y)
-                # shark_move = max(shark_move, [fishs[dx][dy][0], fishs[dx][dy][1], dx, dy])
-    # shark_eat += shark_move[0]
-    # shark_pos = (shark_move[2], shark_move[3])
-    # shark_direction = shark_move[1]
+    for i in range(1, n):
+        next_pos = (shark_direction)
+        d = ds[next_pos]
+        dx = x + d[0] * i
+        dy = y + d[1] * i
+
+        if 0 <= dx < n and 0 <= dy < n:
+            if copy_fish[dx][dy][0] != -1:
+                eat_list.append((dx, dy))
+
+    copy_fish[x][y][0] = -1
+
+    if len(eat_list) == 0:
+        return shark_eat
+
+    for eat in eat_list:
+        shark_direction = copy_fish[eat[0]][eat[1]][1]
+        shark_eat_list.append(dfs(eat[0], eat[1], shark_eat, shark_direction, copy_fish))
+
+    return max(shark_eat_list)
+
+
+if __name__ == "__main__":
+    n = 4
+
+    fishs = []
+
+    for i in range(n):
+        temp = list(map(int, input().split()))
+
+        fish = []
+        for j in range(n):
+            fish.append([temp[j*2], temp[j*2+1]-1])
+        fishs.append(fish)
+
+    ds = ((-1, 0), # 상
+          (-1, -1), # 대 (왼상)
+          (0, -1), # 왼
+          (1, -1), # 대 (왼하)
+          (1, 0), # 하
+          (1, 1), # 대 (오하)
+          (0, 1), # 오
+          (-1, 1)) # 대 (오상)
+
+    ds_len = len(ds)
+
+    shark_pos = (0, 0)
+    shark_direction = fishs[0][0][1]
+    shark_eat = 0
+    # shark_eat += fishs[0][0][0]
+
+    shark_eat = dfs(shark_pos[0], shark_pos[1], shark_eat, shark_direction, fishs)
+
+    # print(*fishs, sep='\n')
+    print(shark_eat)

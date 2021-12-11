@@ -1,3 +1,12 @@
+"""
+Date    : 2021.12.11
+Update  : 2021.12.11
+Source  : 2294.py
+Purpose : 단순 DP를 이용한 풀이.
+Author  : 김학진 (mildsalmon)
+Email   : mildsalmon@gamil.com
+"""
+
 n, k = list(map(int, input().split()))
 coins = []
 dp = [1e9] * (k+1)

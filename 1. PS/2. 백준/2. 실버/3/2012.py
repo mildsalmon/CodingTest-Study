@@ -8,24 +8,26 @@ Email   : mildsalmon@gamil.com
 """
 def rank(counting_sort):
     """
-    인덱스 에러
+    인덱스 에러 해결
     :param counting_sort:
     :return:
     """
+    global n
+
     real_rank = []
     predict_rank = []
     answer = 0
-    count = 0
 
     for i in range(1, len(counting_sort)):
-        if counting_sort[i] != 1:
-            if counting_sort[i] >= 2:
-                predict_rank.extend([i] * (counting_sort[i] - 1))
-            elif counting_sort[i] == 0:
-                real_rank.append(i)
-                count += 1
+        # if counting_sort[i] != 1:
+        if counting_sort[i] >= 1 and i > n:
+            predict_rank.extend([i] * counting_sort[i])
+        elif counting_sort[i] >= 2:
+            predict_rank.extend([i] * (counting_sort[i] - 1))
+        elif counting_sort[i] == 0:
+            real_rank.append(i)
 
-    for i in range(count):
+    for i in range(len(predict_rank)):
         temp = predict_rank[i] - real_rank[i]
         answer += abs(temp)
 
@@ -33,10 +35,17 @@ def rank(counting_sort):
 
 if __name__ == "__main__":
     n = int(input())
-    counting_sort = [0] * (n+1)
+    counting_sort = [-1] * (500001)
 
-    for _ in range(n):
+    array = []
+
+    for i in range(1, n+1):
         temp = int(input())
-        counting_sort[temp] += 1
+        array.append(temp)
+        counting_sort[temp] = 0
+        counting_sort[i] = 0
+
+    for a in array:
+        counting_sort[a] += 1
 
     print(rank(counting_sort))

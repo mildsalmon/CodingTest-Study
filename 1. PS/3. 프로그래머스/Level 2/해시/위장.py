@@ -2,7 +2,7 @@
 Date    : 2021.12.17
 Update  : 2021.12.17
 Source  : 위장.py
-Purpose : 딕셔너리 values의 길이를 조합에 넣고 계산. (시간초과)
+Purpose : 경우의 수 계산
 url     : https://programmers.co.kr/learn/courses/30/lessons/42578
 Author  : 김학진 (mildsalmon)
 Email   : mildsalmon@gamil.com

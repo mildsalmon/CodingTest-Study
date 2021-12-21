@@ -8,33 +8,37 @@ Author  : 김학진 (mildsalmon)
 Email   : mildsalmon@gamil.com
 """
 
-def dfs(s, t, answer):
-    global t_len
+def dfs(t, s):
+    global answer
 
-    if not answer:
-        if len(s) == t_len:
-            if s == t:
-                answer = True
-            return answer
+    s_len = len(s)
 
-        if not answer:
-            temp = s+"A"
-            answer = dfs(temp, t, answer)
-            temp = s+"B"
-            answer = dfs(temp[::-1], t, answer)
 
-    return answer
+    if len(t) == s_len:
+        if ''.join(t) == s:
+            answer = True
+        return
+
+    if t[0] == "B":
+        temp = t[::-1]
+        temp.pop()
+        dfs(temp, s)
+
+    if t[-1] == "A":
+        temp = t[:]
+        temp.pop()
+        dfs(temp, s)
+
 
 if __name__ == "__main__":
     S = input()
-    T = input()
+    T = list(input())
 
-    t_len = len(T)
+    answer = False
 
-    answer = dfs(S, T, False)
+    dfs(T, S)
 
     if answer:
         print(1)
     else:
         print(0)
-

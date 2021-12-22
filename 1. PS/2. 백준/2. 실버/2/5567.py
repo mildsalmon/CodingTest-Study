@@ -23,6 +23,7 @@ for i in range(m):
     # 주어진 친구를 graph로 입력받는다.
     graph[a].append(b)
     # 이 부분에서 A-B가 친구이면 B-A도 친구인 것을 인지했어야 한다.
+    graph[b].append(a)
 # 친구들의 최단 거리를 저장하는 dp
 distance = [1e9] * (n+1)
 # 상근이(나)의 최단 거리 초기화

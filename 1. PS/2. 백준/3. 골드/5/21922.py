@@ -8,82 +8,77 @@ Author  : 김학진 (mildsalmon)
 Email   : mildsalmon@gamil.com
 """
 
-def bfs(graph, visited, x, y, d):
-    global n, m
-
-    while True:
-        if 0 <= x < n and 0 <= y < m:
-            if d[0] == 0 and d[1] == 0:
-                break
-            else:
-                if graph[x][y] != 9:
-                    visited[x][y] = True
-
-                    if graph[x][y] == 1:
-                        if d[1] == 1 or d[1] == -1:
-                            d = (0, 0)
-                        elif d[0] == 1 or d[0] == -1:
-                            pass
-                    elif graph[x][y] == 2:
-                        if d[0] == 1 or d[0] == -1:
-                            d = (0, 0)
-                        elif d[1] == 1 or d[1] == -1:
-                            pass
-                    elif graph[x][y] == 3:
-                        # 빨간선
-                        if d[0] == 1 and d[1] == 0:
-                            d = (0, -1)
-                        # 초록선
-                        elif d[0] == 0 and d[1] == -1:
-                            d = (1, 0)
-                        # 보라선
-                        elif d[0] == -1 and d[1] == 0:
-                            d = (0, 1)
-                        # 파란선
-                        elif d[0] == 0 and d[1] == 1:
-                            d = (-1, 0)
-                    elif graph[x][y] == 4:
-                        # 빨간선
-                        if d[0] == 0 and d[1] == -1:
-                            d = (-1, 0)
-                        # 초록선
-                        elif d[0] == -1 and d[1] == 0:
-                            d = (0, -1)
-                        # 보라선
-                        elif d[0] == 0 and d[1] == 1:
-                            d = (1, 0)
-                        # 파란선
-                        elif d[0] == 1 and d[1] == 0:
-                            d = (0, 1)
-
-                    x = x + d[0]
-                    y = y + d[1]
-                else:
-                    break
-        else:
-            break
-    return
-
-def check_place(graph, air_conditioners):
+def wind_move(graph, visited, x, y):
+    """
+    바람이 지나가는 자리를 구함.
+    :param graph:
+    :param visited: 방문한 위치 (mutable 객체라 따로 return하지 않음)
+    :param x: 에어컨 x좌표
+    :param y: 에어컨 y좌표
+    :return:
+    """
     global n, m
 
     ds = ((0, 1), (1, 0), (0, -1), (-1, 0))
+    # 이 부분은 블로그에 그림으로 설명할 예정
+    item = {1:(9, 1, 9, 3),
+            2:(0, 9, 2, 9),
+            3:(3, 2, 1, 0),
+            4:(1, 0, 3, 2)}
+
+    for i in range(4):
+        d = ds[i]
+
+        dx = x + d[0]
+        dy = y + d[1]
+
+        while True:
+            # 연구실을 벗어나는 경우
+            if 0 <= dx < n and 0 <= dy < m:
+                # 현재 위치가 에어컨이 아닌 경우
+                if graph[dx][dy] != 9:
+                    visited[dx][dy] = True
+                    # 현재 위치에 물건이 있는 경우
+                    if graph[dx][dy] in (1, 2, 3, 4):
+                        i = item[graph[dx][dy]][i]
+                        # 물건1, 물건2로 인해 더 이상 이동하지 못하는 경우
+                        if i == 9:
+                            break
+                        else:
+                            d = ds[i]
+
+                    dx += d[0]
+                    dy += d[1]
+                else:
+                    break
+            else:
+                break
+    return
+
+def check_place(graph, air_conditioners) -> int:
+    """
+    에어컨별로 바람의 경로를 구함.
+    :param graph:
+    :param air_conditioners:
+    :return: 바람이 지나가는 자리의 수
+    """
+    global n, m
+
     visited = [[False] * m for _ in range(n)]
 
     for x, y in air_conditioners:
         visited[x][y] = True
 
-        for d in ds:
-            dx = x + d[0]
-            dy = y + d[1]
+        wind_move(graph, visited, x, y)
 
-            bfs(graph, visited, dx, dy, d)
+    return count_visit(visited)
 
-    place_count = count_visit(visited)
-
-    return place_count
-
-def count_visit(visited):
+def count_visit(visited) -> int:
+    """
+    바람이 지나가는 자리의 갯수를 구함
+    :param visited: 바람이 지나가면 true
+    :return: 바람이 지나가는 자리의 수
+    """
     global n, m
 
     count = 0

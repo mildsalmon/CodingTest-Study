@@ -8,58 +8,60 @@ Author  : 김학진 (mildsalmon)
 Email   : mildsalmon@gamil.com
 """
 
-def dfs(graph, visited, x, y, d):
+def bfs(graph, visited, x, y, d):
     global n, m
 
-    if 0 <= x < n and 0 <= y < m:
-        if d[0] == 0 and d[1] == 0:
-            pass
+    while True:
+        if 0 <= x < n and 0 <= y < m:
+            if d[0] == 0 and d[1] == 0:
+                break
+            else:
+                if graph[x][y] != 9:
+                    visited[x][y] = True
+
+                    if graph[x][y] == 1:
+                        if d[1] == 1 or d[1] == -1:
+                            d = (0, 0)
+                        elif d[0] == 1 or d[0] == -1:
+                            pass
+                    elif graph[x][y] == 2:
+                        if d[0] == 1 or d[0] == -1:
+                            d = (0, 0)
+                        elif d[1] == 1 or d[1] == -1:
+                            pass
+                    elif graph[x][y] == 3:
+                        # 빨간선
+                        if d[0] == 1 and d[1] == 0:
+                            d = (0, -1)
+                        # 초록선
+                        elif d[0] == 0 and d[1] == -1:
+                            d = (1, 0)
+                        # 보라선
+                        elif d[0] == -1 and d[1] == 0:
+                            d = (0, 1)
+                        # 파란선
+                        elif d[0] == 0 and d[1] == 1:
+                            d = (-1, 0)
+                    elif graph[x][y] == 4:
+                        # 빨간선
+                        if d[0] == 0 and d[1] == -1:
+                            d = (-1, 0)
+                        # 초록선
+                        elif d[0] == -1 and d[1] == 0:
+                            d = (0, -1)
+                        # 보라선
+                        elif d[0] == 0 and d[1] == 1:
+                            d = (1, 0)
+                        # 파란선
+                        elif d[0] == 1 and d[1] == 0:
+                            d = (0, 1)
+
+                    x = x + d[0]
+                    y = y + d[1]
+                else:
+                    break
         else:
-            if graph[x][y] != 9:
-                visited[x][y] = True
-                dd = d[:]
-
-                if graph[x][y] == 1:
-                    if dd[1] == 1 or dd[1] == -1:
-                        dd = (0, 0)
-                    elif dd[0] == 1 or dd[0] == -1:
-                        pass
-                elif graph[x][y] == 2:
-                    if dd[0] == 1 or dd[0] == -1:
-                        dd = (0, 0)
-                    elif dd[1] == 1 or dd[1] == -1:
-                        pass
-                elif graph[x][y] == 3:
-                    # 빨간선
-                    if dd[0] == 1 and dd[1] == 0:
-                        dd = (0, -1)
-                    # 초록선
-                    elif dd[0] == 0 and dd[1] == -1:
-                        dd = (1, 0)
-                    # 보라선
-                    elif dd[0] == -1 and dd[1] == 0:
-                        dd = (0, 1)
-                    # 파란선
-                    elif dd[0] == 0 and dd[1] == 1:
-                        dd = (-1, 0)
-                elif graph[x][y] == 4:
-                    # 빨간선
-                    if dd[0] == 0 and dd[1] == -1:
-                        dd = (-1, 0)
-                    # 초록선
-                    elif dd[0] == -1 and dd[1] == 0:
-                        dd = (0, -1)
-                    # 보라선
-                    elif dd[0] == 0 and dd[1] == 1:
-                        dd = (1, 0)
-                    # 파란선
-                    elif dd[0] == 1 and dd[1] == 0:
-                        dd = (0, 1)
-
-                dx = x + dd[0]
-                dy = y + dd[1]
-
-                dfs(graph, visited, dx, dy, dd)
+            break
     return
 
 def check_place(graph, air_conditioners):
@@ -75,7 +77,7 @@ def check_place(graph, air_conditioners):
             dx = x + d[0]
             dy = y + d[1]
 
-            dfs(graph, visited, dx, dy, d)
+            bfs(graph, visited, dx, dy, d)
 
     place_count = count_visit(visited)
 

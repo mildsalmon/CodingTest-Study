@@ -2,8 +2,8 @@
 Date    : 2021.12.23
 Update  : 2021.12.23
 Source  : 21922.py
-Purpose :
-url     : https://www.acmicpc.net/problem/5567
+Purpose : 구현 문제
+url     : https://www.acmicpc.net/problem/21922
 Author  : 김학진 (mildsalmon)
 Email   : mildsalmon@gamil.com
 """

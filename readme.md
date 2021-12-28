@@ -20,7 +20,7 @@
 
     - [CodingTest-Study/11399.py at master · mildsalmon/CodingTest-Study (github.com)](https://github.com/mildsalmon/CodingTest-Study/blob/master/1.%20PS/2.%20%EB%B0%B1%EC%A4%80/2.%20%EC%8B%A4%EB%B2%84/3/11399.py)
 
-### A. 객체지향 프로그래밍
+### B. 객체지향 프로그래밍
 
 #### a. 아기 상어
 
@@ -41,3 +41,15 @@
 - GitHub Code
 
     - [History for 1. PS/1. 이것이 코딩 테스트다 with 파이썬/Ch19/Q47_청소년 상어.py - mildsalmon/CodingTest-Study (github.com)](https://github.com/mildsalmon/CodingTest-Study/commits/master/1.%20PS/1.%20%EC%9D%B4%EA%B2%83%EC%9D%B4%20%EC%BD%94%EB%94%A9%20%ED%85%8C%EC%8A%A4%ED%8A%B8%EB%8B%A4%20with%20%ED%8C%8C%EC%9D%B4%EC%8D%AC/Ch19/Q47_%EC%B2%AD%EC%86%8C%EB%85%84%20%EC%83%81%EC%96%B4.py)
+
+### C. 자료구조
+
+#### a. 해시 (Hash)
+
+- 블로그 포스팅
+
+    - [10546번 - 배부른 마라토너 — mildsalmon (blex.me)](https://blex.me/@mildsalmon/10546%EB%B2%88-%EB%B0%B0%EB%B6%80%EB%A5%B8-%EB%A7%88%EB%9D%BC%ED%86%A0%EB%84%88)
+
+- GitHub Code
+
+    - [History for 1. PS/2. 백준/2. 실버/4/10546.py - mildsalmon/CodingTest-Study (github.com)](https://github.com/mildsalmon/CodingTest-Study/commits/master/1.%20PS/2.%20%EB%B0%B1%EC%A4%80/2.%20%EC%8B%A4%EB%B2%84/4/10546.py)

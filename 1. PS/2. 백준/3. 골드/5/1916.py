@@ -8,6 +8,7 @@ Author  : 김학진 (mildsalmon)
 Email   : mildsalmon@gamil.com
 """
 import heapq
+import sys
 
 def dijkstra(start, destination):
     global n
@@ -34,6 +35,8 @@ def dijkstra(start, destination):
     return distance[destination]
 
 if __name__ == "__main__":
+    input = sys.stdin.readline
+
     n = int(input())
     m = int(input())
 

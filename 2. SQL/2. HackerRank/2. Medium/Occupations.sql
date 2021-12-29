@@ -15,3 +15,6 @@ SELECT MAX(CASE WHEN occupation = 'Doctor' THEN name END) AS Doctor,
 FROM (
     SELECT ROW_NUMBER() OVER (PARTITION BY occupation ORDER BY name) AS rank, name, occupation
     FROM OCCUPATIONS
+)
+GROUP BY rank
+ORDER BY rank ASC;

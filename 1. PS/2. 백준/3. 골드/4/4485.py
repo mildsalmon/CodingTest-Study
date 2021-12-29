@@ -8,18 +8,7 @@ Author  : 김학진 (mildsalmon)
 Email   : mildsalmon@gamil.com
 """
 
-def move(graph, dp, i, j):
-    global n
-
-        # 오른쪽, 아래, 왼쪽, 위
-    ds = ((0, 1), (1, 0), (0, -1), (-1, 0))
-
-    for d in ds:
-        dx = i + d[0]
-        dy = j + d[1]
-
-        if 0 <= dx < n and 0 <= dy < n:
-            dp[dx][dy] = min(dp[dx][dy], dp[i][j] + graph[dx][dy])
+import heapq
 
 tc = 0
 
@@ -32,18 +21,45 @@ while True:
         tc += 1
 
     graph = []
-
     for _ in range(n):
-        graph.append(list(map(int, input().split())))
+        temp = list(map(int, input().split()))
 
-    dp = [[1e9] * n for _ in range(n)]
+        graph.append(temp)
 
-    dp[0][0] = graph[0][0]
+    dp = [[] for _ in range(n * n)]
+
+        # 오른쪽, 아래, 왼쪽, 위
+    ds = ((0, 1), (1, 0), (0, -1), (-1, 0))
 
     for i in range(n):
         for j in range(n):
-            move(graph, dp, i, j)
+            for d in ds:
+                dx = i + d[0]
+                dy = j + d[1]
 
-    print(*dp, sep='\n')
+                if 0 <= dx < n and 0 <= dy < n:
+                    # (비용, x, y)
+                    dp[(i*n)+j].append((graph[dx][dy], dx, dy))
 
-    print(dp[n-1][n-1])
+    distance = [[1e9] * n for _ in range(n)]
+    distance[0][0] = graph[0][0]
+
+    q = []
+    heapq.heappush(q, (distance[0][0], 0, 0))
+
+    while q:
+        cost, x, y = heapq.heappop(q)
+
+        if distance[x][y] < cost:
+            continue
+
+        for next_cost, nx, ny in dp[(x*n)+y]:
+            total_cost = cost + next_cost
+
+            if distance[nx][ny] > total_cost:
+                distance[nx][ny] = total_cost
+                heapq.heappush(q, (total_cost, nx, ny))
+
+    # print(*distance, sep='\n')
+
+    print(f"Problem {tc}: {distance[n-1][n-1]}")

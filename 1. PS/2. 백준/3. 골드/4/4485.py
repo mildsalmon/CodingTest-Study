@@ -10,21 +10,8 @@ Email   : mildsalmon@gamil.com
 
 import heapq
 
-tc = 0
-
-while True:
-    n = int(input())
-
-    if n == 0:
-        break
-    else:
-        tc += 1
-
-    graph = []
-    for _ in range(n):
-        temp = list(map(int, input().split()))
-
-        graph.append(temp)
+def make_adjacency_list(graph) -> list:
+    global n
 
     dp = [[] for _ in range(n * n)]
 
@@ -41,11 +28,21 @@ while True:
                     # (비용, x, y)
                     dp[(i*n)+j].append((graph[dx][dy], dx, dy))
 
+    return dp
+
+def make_distance(start) -> list:
+    global n
+
     distance = [[1e9] * n for _ in range(n)]
-    distance[0][0] = graph[0][0]
+    distance[start[0]][start[1]] = graph[start[0]][start[1]]
+
+    return distance
+
+def dijkstra(start, distance, dp) -> None:
+    global n
 
     q = []
-    heapq.heappush(q, (distance[0][0], 0, 0))
+    heapq.heappush(q, (distance[start[0]][start[1]], start[0], start[1]))
 
     while q:
         cost, x, y = heapq.heappop(q)
@@ -60,6 +57,36 @@ while True:
                 distance[nx][ny] = total_cost
                 heapq.heappush(q, (total_cost, nx, ny))
 
-    # print(*distance, sep='\n')
+def end_check(n):
+    if n == 0:
+        return True
+    else:
+        return False
 
-    print(f"Problem {tc}: {distance[n-1][n-1]}")
+if __name__ == "__main__":
+    tc = 0
+
+    while True:
+        n = int(input())
+
+        if end_check(n):
+            break
+        else:
+            tc += 1
+
+        graph = []
+        for _ in range(n):
+            temp = list(map(int, input().split()))
+            graph.append(temp)
+
+        start = (0, 0)
+
+        dp = make_adjacency_list(graph)
+
+        distance = make_distance(start)
+
+        dijkstra(start, distance, dp)
+
+        # print(*distance, sep='\n')
+
+        print(f"Problem {tc}: {distance[n-1][n-1]}")

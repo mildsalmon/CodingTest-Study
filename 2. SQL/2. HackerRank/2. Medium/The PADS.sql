@@ -8,10 +8,10 @@ Author  : 김학진 (mildsalmon)
 Email   : mildsalmon@gamil.com
 */
 
-SELECT MAX(DECODE(occupation, 'Doctor', name)) AS Doctor,
-        MAX(DECODE(occupation, 'Professor', name)) AS Professor,
-        MAX(DECODE(occupation, 'Singer', name)) AS Singer,
-        MAX(DECODE(occupation, 'Actor', name)) AS Actor
+SELECT MAX(CASE WHEN occupation = 'Doctor' THEN name END) AS Doctor,
+        MAX(CASE WHEN occupation = 'Professor' THEN name END) AS Professor,
+        MAX(CASE WHEN occupation = 'Singer' THEN name END) AS Singer,
+        MAX(CASE WHEN occupation = 'Actor' THEN name END) AS Actor
 FROM (
     SELECT ROW_NUMBER() OVER (PARTITION BY occupation ORDER BY name) AS rank, name, occupation
     FROM OCCUPATIONS

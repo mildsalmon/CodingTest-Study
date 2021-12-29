@@ -8,17 +8,13 @@ Author  : 김학진 (mildsalmon)
 Email   : mildsalmon@gamil.com
 */
 
-SELECT Doctor, Professor, Singer, Actor
+SELECT MAX(DECODE(occupation, 'Doctor', name)) AS Doctor,
+        MAX(DECODE(occupation, 'Professor', name)) AS Professor,
+        MAX(DECODE(occupation, 'Singer', name)) AS Singer,
+        MAX(DECODE(occupation, 'Actor', name)) AS Actor
 FROM (
-    SELECT ROW_NUMBER() OVER (PARTITION BY occupation ORDER BY name) AS A, name, occupation
+    SELECT ROW_NUMBER() OVER (PARTITION BY occupation ORDER BY name) AS rank, name, occupation
     FROM OCCUPATIONS
 )
-PIVOT
-(
-    MAX(name)
-    FOR occupation IN ('Doctor' AS Doctor,
-                       'Professor' AS Professor,
-                       'Singer' AS Singer,
-                       'Actor' AS Actor)
-)
-ORDER BY A ASC;
+GROUP BY rank
+ORDER BY rank ASC;

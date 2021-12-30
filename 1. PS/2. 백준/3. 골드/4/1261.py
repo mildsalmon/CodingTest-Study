@@ -29,37 +29,31 @@ for i in range(n):
             dy = j + d[1]
 
             if 0 <= dx < n and 0 <= dy < m:
-                temp.append((-dx*n+dy, dx, dy))
+                temp.append((dx, dy))
         distance[i].append(temp)
 
 visited = [[False] * m for _ in range(n)]
 
 q = []
-heapq.heappush(q, (graph[0][0], 0, 0, 0))
+heapq.heappush(q, (graph[0][0], 0, 0))
 
 break_wall_count = 0
 
 while q:
-    wall, num, y, x = heapq.heappop(q)
+    wall, x, y = heapq.heappop(q)
 
     if not visited[x][y]:
         if x == n-1 and y == m-1:
+            break_wall_count = wall
             break
 
         visited[x][y] = True
-        print(x, y)
-        if wall == 1:
-            break_wall_count += 1
-            graph[x][y] = 0
 
-        for nnum, nx, ny in distance[x][y]:
+        for nx, ny in distance[x][y]:
             if not visited[nx][ny]:
-                heapq.heappush(q, (graph[nx][ny], nnum, ny, nx))
-
-        print(*graph, sep='\n')
-        print()
-        print(*visited, sep='\n')
-        print()
-        print(break_wall_count)
+                if graph[nx][ny] == 1:
+                    heapq.heappush(q, (wall + 1, nx, ny))
+                else:
+                    heapq.heappush(q, (wall, nx, ny))
 
 print(break_wall_count)

@@ -16,21 +16,7 @@ for i in range(n):
     temp = list(map(int, input()))
     graph.append(temp)
 
-distance = [[] for _ in range(n)]
-
 ds = ((1,0), (0, 1), (-1, 0), (0, -1))
-
-for i in range(n):
-    for j in range(m):
-        temp = []
-
-        for d in ds:
-            dx = i + d[0]
-            dy = j + d[1]
-
-            if 0 <= dx < n and 0 <= dy < m:
-                temp.append((dx, dy))
-        distance[i].append(temp)
 
 visited = [[False] * m for _ in range(n)]
 
@@ -48,12 +34,16 @@ while q:
             break
 
         visited[x][y] = True
+        # 상,하,좌,우 4방향 탐색
+        for d in ds:
+            dx = x + d[0]
+            dy = y + d[1]
 
-        for nx, ny in distance[x][y]:
-            if not visited[nx][ny]:
-                if graph[nx][ny] == 1:
-                    heapq.heappush(q, (wall + 1, nx, ny))
-                else:
-                    heapq.heappush(q, (wall, nx, ny))
+            if 0 <= dx < n and 0 <= dy < m:
+                if not visited[dx][dy]:
+                    if graph[dx][dy] == 1:
+                        heapq.heappush(q, (wall + 1, dx, dy))
+                    else:
+                        heapq.heappush(q, (wall, dx, dy))
 
 print(break_wall_count)

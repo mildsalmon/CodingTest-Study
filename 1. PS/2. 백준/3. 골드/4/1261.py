@@ -81,7 +81,7 @@ def bfs(start, graph) -> int:
 
 if __name__ == "__main__":
     m, n = list(map(int, input().split()))
-    graph = []
+    graph: list = []
 
     for i in range(n):
         temp = list(map(int, input()))

@@ -1,3 +1,13 @@
+"""
+Date    : 2022.01.01
+Update  : 2022.01.01
+Source  : 오픈채팅방.py
+Purpose : 해쉬 / map
+url     : https://programmers.co.kr/learn/courses/30/lessons/42888?language=python3
+Author  : 김학진 (mildsalmon)
+Email   : mildsalmon@gamil.com
+"""
+
 def msg(admin_chat) -> str:
     global uid_to_name
 
@@ -14,7 +24,7 @@ def solution(record) -> list:
 
     admin_chat: list = []
     uid_to_name: dict = {}
-    
+
     for i, row in enumerate(record):
         temp: list = row.split()
 

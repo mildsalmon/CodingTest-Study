@@ -40,7 +40,7 @@ if __name__ == "__main__":
 
     array: list = list(input())
 
-    answer: int = 0
+    answer: int = -1e9
 
     for i, value in enumerate(array):
         if i % 2 == 0:

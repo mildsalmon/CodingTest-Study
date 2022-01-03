@@ -8,16 +8,6 @@ Author  : 김학진 (mildsalmon)
 Email   : mildsalmon@gamil.com
 """
 
-def operation(num_1, num_2, oper) -> int:
-    if oper == '+':
-        B = num_1 + num_2
-    elif oper == '*':
-        B = num_1 * num_2
-    elif oper == '-':
-        B = num_1 - num_2
-
-    return B
-
 def recursive(result, i, num, oper) -> None:
     global answer
 
@@ -26,17 +16,24 @@ def recursive(result, i, num, oper) -> None:
         return
 
     if i+2 < len(num):
-        B: int = operation(num[i+1], num[i+2], oper[i+1])
+        # B: int = operation(num[i+1], num[i+2], oper[i+1])
+        B: int = oper[i+1](num[i+1], num[i+2])
 
-        recursive(operation(result, B, oper[i]), i+2, num, oper)
+        # recursive(operation(result, B, oper[i]), i+2, num, oper)
+        recursive(oper[i](result, B), i+2, num, oper)
 
-    recursive(operation(result, num[i+1], oper[i]), i+1, num, oper)
+    # recursive(operation(result, num[i+1], oper[i]), i+1, num, oper)
+    recursive(oper[i](result, num[i+1]), i+1, num, oper)
 
 if __name__ == "__main__":
 
     n: int = int(input())
     num: list = []
     oper: list = []
+
+    oper_dict = {'+': lambda x, y: x+y,
+                 '-': lambda x, y: x-y,
+                 '*': lambda x, y: x*y}
 
     array: list = list(input())
 
@@ -46,7 +43,7 @@ if __name__ == "__main__":
         if i % 2 == 0:
             num.append(int(value))
         elif i % 2 == 1:
-            oper.append(value)
+            oper.append(oper_dict[value])
 
     result: int = num[0]
 

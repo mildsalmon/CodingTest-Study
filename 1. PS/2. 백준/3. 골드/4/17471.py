@@ -2,75 +2,83 @@
 Date    : 2022.01.04
 Update  : 2022.01.04
 Source  : 17471.py
-Purpose :
+Purpose : bfs / set(difference) / combination
 url     : https://www.acmicpc.net/problem/17471
 Author  : 김학진 (mildsalmon)
 Email   : mildsalmon@gamil.com
 """
 
 from collections import deque
+from itertools import combinations
 
+def check_area_connect(area) -> bool:
+    global n, graph
 
-def bfs(leaf_city):
-    global populations, graph
+    q: deque = deque()
+    q.append(area[0])
 
-    visited = [False] * n
-
-    q = deque()
-    q.append(leaf_city)
-
-    visited[leaf_city] = True
-
-    A_city_population = populations[leaf_city]
-    B_city_population = sum(populations) - A_city_population
-
-    diff_city_population = -1
+    visited: list = [False] * n
+    visited[area[0]] = True
 
     while q:
-        now_city = q.popleft()
+        city: int = q.popleft()
 
-        for next_city in graph[now_city]:
-            if not visited[next_city]:
-                diff_city_population = abs(A_city_population - B_city_population)
+        # area에 있는 city들이 연결되는지 체크
+        for next_city in graph[city]:
+            if next_city in area:
+                if not visited[next_city]:
+                    visited[next_city] = True
+                    q.append(next_city)
 
-                A_city_population = A_city_population + populations[next_city]
-                B_city_population = B_city_population - populations[next_city]
+    return len(area) == visited.count(True)
 
-                if diff_city_population < abs(A_city_population - B_city_population):
-                    return diff_city_population
-                else:
-                    diff_city_population = abs(A_city_population - B_city_population)
+def sum_population(area) -> int:
+    global populations
 
+    # result = 0
+    #
+    # for a in area:
+    #     result += populations[a]
 
-                visited[next_city] = True
-                q.append(next_city)
+    # return result
 
-
-    return diff_city_population
+    return sum(map(lambda x: populations[x], area))
 
 
 if __name__ == "__main__":
-    n = int(input())
-    populations = list(map(int, input().split()))
+    n: int = int(input())
+    populations: list = list(map(int, input().split()))
 
-    graph = [[] for _ in range(n)]
-
-    leaf_city = 0
-    root_city = 0
+    citys: set = {i for i in range(n)}
+    graph: list = [[] for _ in range(n)]
 
     for i in range(n):
-        temp = list(map(int, input().split()))
+        temp: list = list(map(int, input().split()))
 
         for j in range(1, temp[0]+1):
             graph[i].append(temp[j]-1)
 
-        if len(graph[i]) > len(graph[root_city]):
-            root_city = i
+    diff_population: int = 1e9
 
-        if len(graph[i]) == len(graph[leaf_city]):
-            if populations[i] < populations[leaf_city]:
-                leaf_city = i
-        elif len(graph[i]) < len(graph[leaf_city]):
-            leaf_city = i
+    # range가 1부터 시작
+        # 각 선거구는 하나의 구역을 포함해야한다.
+    # range가 n//2 + 1로 끝난다.
+        # 6C2 = 6C4는 같다. A선거구가 2개 지역을 먹든, 2개 지역을 안먹든 동일하다.
+    for i in range(1, n//2+1):
+        A_areas = list(combinations(range(n), i))
 
-    print(bfs(leaf_city))
+        for A_area in A_areas:
+            # 선택되지 않은 지역들을 B지역으로 지정.
+            B_area = tuple(citys.difference(A_area))
+
+            if check_area_connect(A_area) and check_area_connect(B_area):
+                A_population = sum_population(A_area)
+                B_population = sum_population(B_area)
+
+                diff_population = min(diff_population, abs(A_population - B_population))
+
+    if diff_population == 1e9:
+        print(-1)
+    else:
+        print(diff_population)
+

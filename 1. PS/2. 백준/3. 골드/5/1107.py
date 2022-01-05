@@ -8,50 +8,30 @@ Author  : 김학진 (mildsalmon)
 Email   : mildsalmon@gamil.com
 """
 
-import sys
-
-# input = sys.stdin.readline().rstrip()
-
-def move_channel(depth, remote_control, channel):
-    global n, min_push_button
-
-    # 종료조건
-    if len(n) - 1 <= depth <= len(n) + 1 and len(channel) != 0:
-        min_push_button = min(min_push_button, depth + abs(int(channel) - int(n)))
-
-        if depth == len(n) + 1:
-            return
-
-    # 완전탐색
-    if depth < len(n) - 1:
-        bound = [i%10 for i in range(int(n[depth]) - 2, int(n[depth]) + 3)]
-        # bound = [int(n[depth]) - 1, int(n[depth]), (int(n[depth]) + 2) % 10]
-
-        for i in bound:
-            if remote_control[i]:
-                move_channel(depth+1, remote_control, channel + str(i))
-    else:
-        for i in range(10):
-            if remote_control[i]:
-                move_channel(depth+1, remote_control, channel + str(i))
-
-
 if __name__ == "__main__":
-    while True:
-        n: str = input()
-        m: int = int(input())
+    n: int = int(input())
+    m: int = int(input())
 
-        if m == 0:
-            trouble_button = set()
-        else:
-            trouble_button = set(map(int, input().split()))
-        # print(n)
-        # print(trouble_button)
-        remote_control = [False if i in trouble_button else True for i in range(10)]
+    if m:
+        trouble_button = set(map(int, input().split()))
+    else:
+        trouble_button = set()
 
-        min_push_button = abs(100 - int(n))
+    max_channel = 500_000
+    min_push_button = abs(100 - n)
 
-        if min_push_button != 0:
-            move_channel(0, remote_control, '')
+    if min_push_button:
+        for i in range(max_channel * 2 + 1):
+            flag = True
+            count = 0
 
-        print(min_push_button)
+            for j in map(int, str(i)):
+                if j in trouble_button:
+                    flag = False
+                    break
+                else:
+                    count += 1
+            if flag:
+                min_push_button = min(min_push_button, count + abs(n - i))
+
+    print(min_push_button)

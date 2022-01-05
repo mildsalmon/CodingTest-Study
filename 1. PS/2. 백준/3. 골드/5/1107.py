@@ -8,15 +8,6 @@ Author  : 김학진 (mildsalmon)
 Email   : mildsalmon@gamil.com
 """
 
-"""
-반례
-
-1
-1
-1
-
-답: 2
-"""
 import sys
 
 input = sys.stdin.readline
@@ -25,7 +16,7 @@ def move_channel(depth, remote_control, channel):
     global n, min_push_button
 
     # 종료조건
-    if len(str(n)) - 1 <= depth <= len(str(n)) + 1:
+    if len(str(n)) - 1 <= depth <= len(str(n)) + 1 and len(channel) != 0:
         min_push_button = min(min_push_button, depth + abs(int(channel) - n))
 
         if depth == len(str(n)) + 1:

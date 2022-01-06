@@ -8,9 +8,12 @@ Author  : 김학진 (mildsalmon)
 Email   : mildsalmon@gamil.com
 """
 
-import heapq
+from collections import deque
+import sys
 
-def spring(area, q):
+input = sys.stdin.readline
+
+def spring(area, q, add_nutrient):
     """
     자신의 나이만큼 양분을 먹음 -> 나무()
     :param area:
@@ -19,64 +22,62 @@ def spring(area, q):
     """
     global n
 
+    ds = ((-1, -1), (-1, 0), (-1,1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1))
+
+    create_tree = []
+    flag = False
+
     for i in range(n):
         for j in range(n):
-            temp_q = []
-            death_nutrient = 0
+            if len(q[i*n+j]) != 0:
+                flag = True
+                save_end_point = len(q[i*n+j])
+                end_point = 0
+                death_nutrient = 0
 
-            while q[i*n+j]:
-                age = heapq.heappop(q[i*n+j])
-                # 양분 먹기
-                area[i][j] -= age
-                if area[i][j] < 0:
-                    area[i][j] += age
-                    death_nutrient += summer(age)
-                else:
-                    age += 1
-                    temp_q.append(age)
+                while save_end_point > end_point:
+                    end_point += 1
+                    age = q[i*n+j].popleft()
+                    # 양분 먹기
+                    area[i][j] -= age
+                    if area[i][j] < 0:
+                        area[i][j] += age
+                        death_nutrient += age // 2
+                    else:
+                        age += 1
+                        q[i*n+j].append(age)
 
-            while temp_q:
-                tree = temp_q.pop()
-                heapq.heappush(q[i*n+j], tree)
+                        if age % 5 == 0:
+                            create_tree.append((i, j))
 
-            area[i][j] += death_nutrient
+                area[i][j] += death_nutrient
+            area[i][j] += add_nutrient[i][j]
+
+    if not flag:
+        return
+
+    for i, j in create_tree:
+        for d in ds:
+            dx = i + d[0]
+            dy = j + d[1]
+            if 0 <= dx < n and 0 <= dy < n:
+                new_tree = 1
+                q[dx*n+dy].appendleft(new_tree)
+
 
 def summer(age):
 
     return age//2
 
-def fall(q):
-    global n
-
-    ds = ((-1, -1), (-1, 0), (-1,1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1))
-
-    for i in range(n):
-        for j in range(n):
-            for tree in q[i*n+j]:
-                if tree % 5 == 0:
-                    for d in ds:
-                        dx = i + d[0]
-                        dy = j + d[1]
-                        if 0 <= dx < n and 0 <= dy < n:
-                            new_tree = 1
-                            heapq.heappush(q[dx*n+dy], new_tree)
-
-def winter(area, add_nutrient):
-    global n
-
-    for i in range(n):
-        for j in range(n):
-            area[i][j] += add_nutrient[i][j]
 
 def count_tree(q):
     global n
 
     count = 0
 
-    for i in range(n):
-        for j in range(n):
-            if len(q[i*n+j]) != 0:
-                count += len(q[i*n+j])
+    for i in range(n*n):
+        if len(q[i]) != 0:
+            count += len(q[i])
 
     return count
 
@@ -94,20 +95,25 @@ if __name__ == "__main__":
     # 각 area별 나무 정보
     # 나무 정보를 2차원 배열로 받기에는 조금 복잡해져서 1차원 배열로 받음
         # 나무는 어린 나무부터 양분을 먹는다 -> 우선순위 큐로 구현
-    q = [[] for _ in range(n*n)]
+    q = [deque() for _ in range(n*n)]
+    temp_trees = [[] for _ in range(n*n)]
 
     for i in range(m):
         x, y, age = list(map(int, input().split()))
         x -= 1
         y -= 1
-        heapq.heappush(q[x*n+y], age)
+        temp_trees[x*n+y].append(age)
+
+    for i in range(n):
+        for j in range(n):
+            if len(temp_trees[i*n+j]) != 0:
+                age = sorted(temp_trees[i*n+j])
+                q[i*n+j].extend(age)
 
     # K년동안의 나무 수 변화를 지켜봄
     while k != 0:
         k -= 1
 
-        spring(area, q)
-        fall(q)
-        winter(area, add_nutrient)
+        spring(area, q, add_nutrient)
 
     print(count_tree(q))

@@ -1,6 +1,6 @@
 """
 Date    : 2022.01.06
-Update  : 2022.01.06
+Update  : 2022.01.07
 Source  : 16235.py
 Purpose :
 url     : https://www.acmicpc.net/problem/16235
@@ -8,12 +8,7 @@ Author  : 김학진 (mildsalmon)
 Email   : mildsalmon@gamil.com
 """
 
-from collections import deque
-import sys
-
-input = sys.stdin.readline
-
-def season(area: list, q: list, add_nutrient: list) -> bool:
+def season(area: list, trees: dict, add_nutrient: list) -> bool:
     """
     봄 (필요 매개변수 -> 나무 정보, 땅 정보)
         나무는 자신의 나이만큼 양분을 먹고 나이가 1 증가함.
@@ -28,78 +23,117 @@ def season(area: list, q: list, add_nutrient: list) -> bool:
         땅에 양분 추가
 
     :param area: 땅 정보
-    :param q: 나무 정보 (2차원 리스트 : 원소는 deque)
+    :param trees: 나무 정보 (2차원 리스트 : 원소는 dict)
     :param add_nutrient: 매년 추가되는 양분 정보
     :return:
     """
     global n
 
-    ds = ((-1, -1), (-1, 0), (-1,1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1))
-
-    create_tree = []
+    ds = ((-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1))
     flag = False
+    create_trees = []
 
+    # 봄
     for i in range(n):
         for j in range(n):
-            # 봄
-            if len(q[i*n+j]) != 0:
+            # 현재 area에 나무들이 있다면,
+            if len(trees[i][j]) != 0:
                 flag = True
-                save_end_point = len(q[i*n+j])
-                end_point = 0
-                death_nutrient = 0
+                tree = []
+                for key, value in trees[i][j].items():
+                    temp = [key] * value
+                    tree.extend(temp)
+                tree.sort()
 
-                while save_end_point > end_point:
-                    end_point += 1
-                    age = q[i*n+j].popleft()
-                    # 양분 먹기
+                trees[i][j].clear()
+                # temp_tree = dict()
+                death = 0
+                for age in tree:
                     area[i][j] -= age
+                    # 양분을 먹지 못하고 죽음
                     if area[i][j] < 0:
                         area[i][j] += age
-                        death_nutrient += age // 2
-                    else:
+                        # 여름 대비
+                        death += age // 2
+                    # 양분을 먹을 수 있음
+                    elif area[i][j] >= 0:
                         age += 1
-                        q[i*n+j].append(age)
+                        if age in trees[i][j]:
+                            trees[i][j][age] += 1
+                        elif age not in trees[i][j]:
+                            trees[i][j][age] = 1
 
-                        # 시간 단축을 위해 가을에 번식할 나무를 미리 선정함
-                            # 이렇게 해도 python에서는 시간초과...
                         if age % 5 == 0:
-                            create_tree.append((i, j))
+                            create_trees.append((i, j))
                 # 여름
-                area[i][j] += death_nutrient
+                area[i][j] += death
             # 겨울
-                # 시간 단축을 위해 한꺼번에 처리함. (그런데, 이렇게 해도 python에서는 시간초과가 뜬다)
-                # 이미 지나간 i, j 좌표의 땅의 양분은 이후 봄, 여름, 가을에 영향을 주지 않기 때문에 봄, 여름과 같이 처리함.
             area[i][j] += add_nutrient[i][j]
 
-    # 만약 area에 나무가 하나도 없다면 나무는 더 생기지 않으므로 아예 종료하는게 맞음.
-    if not flag:
-        return False
-
     # 가을
-    for i, j in create_tree:
+    """
+    시간 초과가 나서 수정해봤는데, 역시나 시간 초과
+    생각해보면 이 코드가 밑에 코드보다 더 느릴지도 모르겠다.
+    """
+    for x, y in create_trees:
         for d in ds:
-            dx = i + d[0]
-            dy = j + d[1]
+            dx = x + d[0]
+            dy = y + d[1]
+
             if 0 <= dx < n and 0 <= dy < n:
-                new_tree = 1
-                # 새로운 나무는 맨 앞에 추가.
-                q[dx*n+dy].appendleft(new_tree)
+                age = 1
 
-    return True
+                if age in trees[dx][dy]:
+                    trees[dx][dy][age] += 1
+                elif age not in trees[dx][dy]:
+                    trees[dx][dy][age] = 1
 
-def count_tree(q: list) -> int:
+    """
+    시간 초과
+    """
+    # for i in range(n):
+    #     for j in range(n):
+    #         # 아래 if문이 없더라도 trees[i][j]가 없는 경우에는 for문 안으로 들어가지 못한다.
+    #         # 다만, 코드의 일관성을 위해 if문을 작성하였다.
+    #         if len(trees[i][j]) != 0:
+    #             # dict().keys()는 dict()의 원소가 변하면 같이 변하기 때문에 따로 list 객체를 만듬
+    #             keys = list(trees[i][j].keys())
+    #             # 위 코드(#28)에서 key를 처리하는 방식처럼 처리해도 되지만, 불필요하다 판단되어 key값에 단순 list만 적용함
+    #                 # 가을은 새로운 나무의 탄생이다.
+    #                 # 새로운 나무는 나이가 무조건 1이다. /
+    #                 # 기존 위치의 나무의 나이가 5의 배수인 나무의 갯수만큼 새로운 나무가 태어난다.
+    #                 # 따라서 새로운 나무의 나이(age=1)을 key로 5의 배수인 나무의 수를 value로 주면 된다.
+    #             for key in keys:
+    #                 if key % 5 == 0:
+    #                     for d in ds:
+    #                         dx = i + d[0]
+    #                         dy = j + d[1]
+    #
+    #                         if 0 <= dx < n and 0 <= dy < n:
+    #                             age = 1
+    #
+    #                             # 봄을 지나고 왔기 때문에 trees에는 age가 1인 나무가 있을 수 없다.
+    #                             # 다만, 모든 경우에 오류가 발생하지 않게하기 위해서 아래와 같이 작성하였다.
+    #                             if age in trees[dx][dy]:
+    #                                 trees[dx][dy][age] += trees[i][j][key]
+    #                             elif age not in trees[dx][dy]:
+    #                                 trees[dx][dy][age] = trees[i][j][key]
+
+    return flag
+
+def count_tree(trees: list) -> int:
     """
     현재 나무의 갯수를 세줌.
-    :param q: 나무 정보 (2차원 리스트 : 원소는 deque)
+    :param trees: 나무 정보 (2차원 리스트 : 원소는 deque)
     :return: 나무의 개수
     """
     global n
 
     count = 0
 
-    for i in range(n*n):
-        if len(q[i]) != 0:
-            count += len(q[i])
+    for i in range(n):
+        for j in range(n):
+            count += sum(trees[i][j].values())
 
     return count
 
@@ -115,29 +149,22 @@ if __name__ == "__main__":
         add_nutrient.append(temp)
 
     # 각 area별 나무 정보
-    # 나무 정보를 2차원 배열로 받기에는 조금 복잡해져서 1차원 배열로 받음
         # 나무는 어린 나무부터 양분을 먹는다 -> 우선순위 큐로 구현
-    q = [deque() for _ in range(n*n)]
-    temp_trees = [[] for _ in range(n*n)]
+    trees = [[{} for _ in range(n)] for _ in range(n)]
 
     for i in range(m):
         x, y, age = list(map(int, input().split()))
-        x -= 1
-        y -= 1
-        temp_trees[x*n+y].append(age)
 
-    for i in range(n):
-        for j in range(n):
-            if len(temp_trees[i*n+j]) != 0:
-                # 우선순위 큐를 사용하지 못하므로 deque에 나무를 집어넣을때 나이순으로 정렬을 시도해야함.
-                age = sorted(temp_trees[i*n+j])
-                q[i*n+j].extend(age)
+        if age in trees[x-1][y-1]:
+            trees[x-1][y-1][age] += 1
+        elif age not in trees[x-1][y-1]:
+            trees[x-1][y-1][age] = 1
 
     # K년동안의 나무 수 변화를 지켜봄
     while k != 0:
         k -= 1
 
-        if not season(area, q, add_nutrient):
+        if not season(area, trees, add_nutrient):
             break
 
-    print(count_tree(q))
+    print(count_tree(trees))

@@ -34,47 +34,41 @@ def season(area: list, trees: dict, add_nutrient: list) -> bool:
     create_trees = []
 
     # 봄
-    for i in range(n):
-        for j in range(n):
-            # 현재 area에 나무들이 있다면,
-            if len(trees[i][j]) != 0:
-                flag = True
-                tree = []
-                for key, value in trees[i][j].items():
-                    temp = [key] * value
-                    tree.extend(temp)
-                tree.sort()
+    trees_items = list(trees.items())
 
-                trees[i][j].clear()
-                # temp_tree = dict()
-                death = 0
-                for age in tree:
-                    area[i][j] -= age
-                    # 양분을 먹지 못하고 죽음
-                    if area[i][j] < 0:
-                        area[i][j] += age
-                        # 여름 대비
-                        death += age // 2
-                    # 양분을 먹을 수 있음
-                    elif area[i][j] >= 0:
-                        age += 1
-                        if age in trees[i][j]:
-                            trees[i][j][age] += 1
-                        elif age not in trees[i][j]:
-                            trees[i][j][age] = 1
+    for key, value in trees_items:
+        # 현재 area에 나무들이 있다면,
+        x, y = key
+        if value:
+            flag = True
+            new_trees = []
+            death = 0
+            """
+            아마 시간 초과의 원인이 이 부분이라는 생각이 든다.
+            동일한 age가 너무 많이 주어져서 그것을 계산으로 처리하지 않고 하나씩 처리하면 시간초과가 발생하는 것 같다.
+            """
+            for age in value:
+                area[x][y] -= age
+                # 양분을 먹지 못하고 죽음
+                if area[x][y] < 0:
+                    area[x][y] += age
+                    # 여름 대비
+                    death += age // 2
+                # 양분을 먹을 수 있음
+                elif area[x][y] >= 0:
+                    age += 1
+                    new_trees.append(age)
 
-                        if age % 5 == 0:
-                            create_trees.append((i, j))
-                # 여름
-                area[i][j] += death
-            # 겨울
-            area[i][j] += add_nutrient[i][j]
+                    # 가을 대비
+                    if age % 5 == 0:
+                        create_trees.append((x, y))
+            trees[(x,y)] = new_trees
+            # 여름
+            area[x][y] += death
+        # 겨울
+        area[x][y] += add_nutrient[x][y]
 
     # 가을
-    """
-    시간 초과가 나서 수정해봤는데, 역시나 시간 초과
-    생각해보면 이 코드가 밑에 코드보다 더 느릴지도 모르겠다.
-    """
     for x, y in create_trees:
         for d in ds:
             dx = x + d[0]
@@ -83,41 +77,7 @@ def season(area: list, trees: dict, add_nutrient: list) -> bool:
             if 0 <= dx < n and 0 <= dy < n:
                 age = 1
 
-                if age in trees[dx][dy]:
-                    trees[dx][dy][age] += 1
-                elif age not in trees[dx][dy]:
-                    trees[dx][dy][age] = 1
-
-    """
-    시간 초과
-    """
-    # for i in range(n):
-    #     for j in range(n):
-    #         # 아래 if문이 없더라도 trees[i][j]가 없는 경우에는 for문 안으로 들어가지 못한다.
-    #         # 다만, 코드의 일관성을 위해 if문을 작성하였다.
-    #         if len(trees[i][j]) != 0:
-    #             # dict().keys()는 dict()의 원소가 변하면 같이 변하기 때문에 따로 list 객체를 만듬
-    #             keys = list(trees[i][j].keys())
-    #             # 위 코드(#28)에서 key를 처리하는 방식처럼 처리해도 되지만, 불필요하다 판단되어 key값에 단순 list만 적용함
-    #                 # 가을은 새로운 나무의 탄생이다.
-    #                 # 새로운 나무는 나이가 무조건 1이다. /
-    #                 # 기존 위치의 나무의 나이가 5의 배수인 나무의 갯수만큼 새로운 나무가 태어난다.
-    #                 # 따라서 새로운 나무의 나이(age=1)을 key로 5의 배수인 나무의 수를 value로 주면 된다.
-    #             for key in keys:
-    #                 if key % 5 == 0:
-    #                     for d in ds:
-    #                         dx = i + d[0]
-    #                         dy = j + d[1]
-    #
-    #                         if 0 <= dx < n and 0 <= dy < n:
-    #                             age = 1
-    #
-    #                             # 봄을 지나고 왔기 때문에 trees에는 age가 1인 나무가 있을 수 없다.
-    #                             # 다만, 모든 경우에 오류가 발생하지 않게하기 위해서 아래와 같이 작성하였다.
-    #                             if age in trees[dx][dy]:
-    #                                 trees[dx][dy][age] += trees[i][j][key]
-    #                             elif age not in trees[dx][dy]:
-    #                                 trees[dx][dy][age] = trees[i][j][key]
+                trees[(dx, dy)].insert(0, age)
 
     return flag
 
@@ -133,7 +93,8 @@ def count_tree(trees: list) -> int:
 
     for i in range(n):
         for j in range(n):
-            count += sum(trees[i][j].values())
+            if trees[(i,j)]:
+                count += len(trees[(i, j)])
 
     return count
 
@@ -150,15 +111,17 @@ if __name__ == "__main__":
 
     # 각 area별 나무 정보
         # 나무는 어린 나무부터 양분을 먹는다 -> 우선순위 큐로 구현
-    trees = [[{} for _ in range(n)] for _ in range(n)]
+    trees = {(i, j) : [] for i in range(n) for j in range(n)}
 
     for i in range(m):
         x, y, age = list(map(int, input().split()))
 
-        if age in trees[x-1][y-1]:
-            trees[x-1][y-1][age] += 1
-        elif age not in trees[x-1][y-1]:
-            trees[x-1][y-1][age] = 1
+        trees[(x-1, y-1)].append(age)
+
+    for i in range(n):
+        for j in range(n):
+            if trees[(i, j)]:
+                trees[(i, j)].sort()
 
     # K년동안의 나무 수 변화를 지켜봄
     while k != 0:

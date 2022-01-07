@@ -42,42 +42,53 @@ def season(area: list, trees: dict, add_nutrient: list) -> bool:
         if value:
             flag = True
             new_trees = []
-            death = 0
+            death = []
             """
             아마 시간 초과의 원인이 이 부분이라는 생각이 든다.
-            동일한 age가 너무 많이 주어져서 그것을 계산으로 처리하지 않고 하나씩 처리하면 시간초과가 발생하는 것 같다.
+            ~~동일한 age가 너무 많이 주어져서 그것을 계산으로 처리하지 않고 하나씩 처리하면 시간초과가 발생하는 것 같다.~~
+            아예 나무 여러개를 낱개로 처리하지 말고 개수 카운트를 해서 dict()에 value로 줘야겠다.
+            밑에 방식은 나무 낱개 개수만큼 리스트에 넣어줘야하므로 속도저하가 발생하는 것 같다.
             """
-            for age in value:
-                area[x][y] -= age
+            for index, age in enumerate(set(value)):
+                survive = value.count(age)
+                total_age = age * survive
+                area[x][y] -= total_age
+
                 # 양분을 먹지 못하고 죽음
                 if area[x][y] < 0:
-                    area[x][y] += age
-                    # 여름 대비
-                    death += age // 2
+                    area[x][y] += total_age
+                    new_survive = area[x][y] // age
+                    if new_survive == 0:
+                        death.extend(value[index:])
+                        break
+                    death.extend([age] * (survive - new_survive))
+                    area[x][y] -= age * new_survive
+                    new_trees.extend([age] * new_survive)
                 # 양분을 먹을 수 있음
                 elif area[x][y] >= 0:
                     age += 1
-                    new_trees.append(age)
-
-                    # 가을 대비
-                    if age % 5 == 0:
-                        create_trees.append((x, y))
+                new_trees.extend([age] * survive)
             trees[(x,y)] = new_trees
             # 여름
-            area[x][y] += death
+            area[x][y] += sum(list(map(lambda x: x//2, death)))
         # 겨울
         area[x][y] += add_nutrient[x][y]
 
     # 가을
-    for x, y in create_trees:
-        for d in ds:
-            dx = x + d[0]
-            dy = y + d[1]
+    trees_items = list(trees.items())
 
-            if 0 <= dx < n and 0 <= dy < n:
-                age = 1
+    for key, value in trees_items:
+        if value:
+            x, y = key
+            for age in set(value):
+                if age % 5 == 0:
+                    for d in ds:
+                        dx = x + d[0]
+                        dy = y + d[1]
 
-                trees[(dx, dy)].insert(0, age)
+                        if 0 <= dx < n and 0 <= dy < n:
+                            for _ in range(value.count(age)):
+                                trees[(dx, dy)].insert(0, 1)
 
     return flag
 

@@ -2,7 +2,7 @@
 Date    : 2022.01.06
 Update  : 2022.01.07
 Source  : 16235.py
-Purpose :
+Purpose : 구현 / 시간복잡도 / dict / count
 url     : https://www.acmicpc.net/problem/16235
 Author  : 김학진 (mildsalmon)
 Email   : mildsalmon@gamil.com
@@ -30,48 +30,77 @@ def season(area: list, trees: list, add_nutrient: list) -> bool:
     global n
 
     ds = ((-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1))
+    # 만약 좌표평면에 나무가 하나도 없다면 나무는 번식도 성장도 못함.
+    # 따라서 종료시켜야함.
     flag = False
-    create_trees = []
+    create_trees = {}
 
     # 봄
     for i in range(n):
         for j in range(n):
+            """
+            좌표별로 저장된 나무 dict를 분석한다.
+            dict에 저장된 값은 정렬을 통해 어린 나무부터 처리되도록 한다.
+            아래의 trees_items, new_trees, death는 좌표별로 새로운 값으로 갱신해야한다.
+            """
             trees_items = sorted(list(trees[i][j].items()))
             new_trees = {}
             death = 0
 
             for index, item in enumerate(trees_items):
-                # 현재 area에 나무들이 있다면,
                 age, tree_num = item
                 flag = True
                 """
-                아마 시간 초과의 원인이 이 부분이라는 생각이 든다.
-                ~~동일한 age가 너무 많이 주어져서 그것을 계산으로 처리하지 않고 하나씩 처리하면 시간초과가 발생하는 것 같다.~~
-                아예 나무 여러개를 낱개로 처리하지 말고 개수 카운트를 해서 dict()에 value로 줘야겠다.
-                밑에 방식은 나무 낱개 개수만큼 리스트에 넣어줘야하므로 속도저하가 발생하는 것 같다.
+                ## 시간초과의 원인 !
+                좌표별로 나무를 관리하는 방법을 생각할 수 있다.
+                이때, 단순히 deque로 나무들을 모두 넣어주면 가을에 증폭되는 1번 나무들을 제어할 수 없어서 시간초과가 발생한다.
+                따라서, dict의 key:value를 (나무의 나이:나무의 개수)로 관리하면 봄에 나무의 개수만큼 반복이 도는게 아니라 나무의 나이만큼만 반복이 돌게된다.
                 """
+                # 현재 나이를 가지는 모든 나무를 곱함.
                 total_age = age * tree_num
                 area[i][j] -= total_age
 
-                # 양분을 먹지 못하고 죽음
                 if area[i][j] < 0:
+                    """
+                    # 현재 나이를 가지는 모든 나무에 영양분을 못줌
+                        1. 이전에 제거한 영양분을 복구한다.
+                        2. 현재 나이의 나무는 최대 몇개 심을 수 있는지 구함.
+                            1. 심을 수 있는 나무가 1개 이상인 경우
+                                1. 땅에 (심을 수 있는 나무 * 현재 나무의 나이)를 뺀다.
+                                2. 여름을 대비하기 위해 죽은 나무를 분해한다.
+                                3. 나무의 나이를 증가시키고 심을 수 있는 나무의 개수로 업데이트한다.
+                            2. 심을 수 있는 나무가 0개인 경우
+                                1. 현재 나무부터 뒤에 있는 모든 나무를 분해한다.
+                                2. break로 현재 좌표를 탈출한다.
+                    """
                     area[i][j] += total_age
                     survive = area[i][j] // age
-
                     if survive:
                         area[i][j] -= age * survive
+                        # 여름 대비
                         death += (age // 2) * (tree_num - survive)
                         age += 1
                         if age in new_trees:
                             new_trees[age] += survive
                         elif age not in new_trees:
                             new_trees[age] = survive
+
+                        # 가을 대비
+                        if age % 5 == 0:
+                            if (i, j) in create_trees:
+                                create_trees[(i, j)] += survive
+                            elif (i, j) not in create_trees:
+                                create_trees[(i, j)] = survive
                     else:
+                        # 여름 대비
                         death += summer(trees_items[index:])
                         break
 
-                # 양분을 먹을 수 있음
                 elif area[i][j] >= 0:
+                    """
+                    # 현재 나이를 가지는 모든 나무에 영양분을 줄 수 있음
+                        1. 나무의 나이를 증가하고 나무의 개수를 업데이트한다.
+                    """
                     age += 1
 
                     if age in new_trees:
@@ -79,27 +108,43 @@ def season(area: list, trees: list, add_nutrient: list) -> bool:
                     elif age not in new_trees:
                         new_trees[age] = tree_num
 
-            # 여름
-            area[i][j] += death
+                    # 가을 대비
+                    """
+                    가을을 따로 2중 for문을 다시 써서 처리하는건 비효율적으로 보인다.
+                    따라서 시간 절약을 위해 여기서 가을 대비를 하자.
+                    """
+                    if age % 5 == 0:
+                        if (i, j) in create_trees:
+                            create_trees[(i, j)] += tree_num
+                        elif (i, j) not in create_trees:
+                            create_trees[(i, j)] = tree_num
+            """
+            마지막으로 새로 갱신한 나무 dict로 현재 좌표를 업데이트하면 된다.
+            """
             trees[i][j] = new_trees
+            # 여름
+            """
+            여름에는 분해된 나무들을 더하기만 하면 된다.
+            """
+            area[i][j] += death
+
             # 겨울
             area[i][j] += add_nutrient[i][j]
 
     # 가을
-    for i in range(n):
-        for j in range(n):
-            trees_items = list(trees[i][j].items())
-            for key, value in trees_items:
-                if key % 5 == 0:
-                    for d in ds:
-                        dx = i + d[0]
-                        dy = j + d[1]
-                        age = 1
-                        if 0 <= dx < n and 0 <= dy < n:
-                            if age in trees[dx][dy]:
-                                trees[dx][dy][age] += value
-                            elif age not in trees[dx][dy]:
-                                trees[dx][dy][age] = value
+    for key, value in create_trees.items():
+        x, y = key
+
+        for d in ds:
+            dx = x + d[0]
+            dy = y + d[1]
+            age = 1
+
+            if 0 <= dx < n and 0 <= dy < n:
+                if age in trees[dx][dy]:
+                    trees[dx][dy][age] += value
+                elif age not in trees[dx][dy]:
+                    trees[dx][dy][age] = value
 
     return flag
 

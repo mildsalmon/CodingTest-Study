@@ -7,7 +7,11 @@ url     : https://www.acmicpc.net/problem/1520
 Author  : 김학진 (mildsalmon)
 Email   : mildsalmon@gamil.com
 """
-def dfs(x, y, visited):
+import sys
+
+sys.setrecursionlimit(10000)
+
+def dfs(x: int, y: int, visited: list) -> int:
     global n, m, graph
 
     ds = ((0, -1), (0, 1), (-1, 0), (1, 0))
@@ -40,6 +44,4 @@ if __name__ == "__main__":
 
     visited = [[-1]*n for _ in range(m)]
 
-    dfs(0, 0, visited)
-
-    print(visited[0][0])
+    print(dfs(0, 0, visited))

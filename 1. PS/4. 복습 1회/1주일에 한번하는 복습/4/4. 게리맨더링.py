@@ -9,16 +9,27 @@ Email   : mildsalmon@gamil.com
 """
 
 from itertools import combinations
+from collections import deque
 
-def check_party(party):
+def check_party(party) -> bool:
     global graph, n
 
     visited = [False] * n
 
-    for city in party:
+    q = deque()
+    q.append(list(party)[0])
+
+    while q:
+        city = q.popleft()
+
+        if visited[city]:
+            continue
+
+        visited[city] = True
+
         for next_city in graph[city]:
             if next_city in party:
-                visited[next_city] = True
+                q.append(next_city)
 
     return len(party) == visited.count(True)
 

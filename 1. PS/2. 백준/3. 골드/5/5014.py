@@ -2,7 +2,7 @@
 Date    : 2022.01.12
 Update  : 2022.01.12
 Source  : 5014.py
-Purpose :
+Purpose : bfs / visited / 사전 종료 조건
 url     : https://www.acmicpc.net/problem/5014
 Author  : 김학진 (mildsalmon)
 Email   : mildsalmon@gamil.com
@@ -24,32 +24,30 @@ def count_button(F: int, S: int, G: int, U: int, D: int) -> str:
         if S == G:
             return "0"
 
-        q = deque()
-        q.append(S)
-
         count = 0
 
+        q = deque()
+        q.append((count, S))
+
+        visited = [False] * (F+1)
+
         while q:
-            now_floor = q.popleft()
+            count, now_floor = q.popleft()
 
             if now_floor == G:
                 return str(count)
 
             count += 1
 
-            if G - now_floor > 0:
-                if G - now_floor < U:
-                    next_floor = now_floor - D
-                else:
-                    next_floor = now_floor + U
-            elif G - now_floor < 0:
-                if abs(G - now_floor) < D:
-                    next_floor = now_floor + U
-                else:
-                    next_floor = now_floor - D
+            next_up_floor = now_floor + U
+            next_down_floor = now_floor - D
 
-            if 1 <= next_floor <= F:
-                q.append(next_floor)
+            if 1 <= next_up_floor <= F and not visited[next_up_floor]:
+                visited[next_up_floor] = True
+                q.append((count, next_up_floor))
+            if 1 <= next_down_floor <= F and not visited[next_down_floor]:
+                visited[next_down_floor] = True
+                q.append((count, next_down_floor))
 
     return "use the stairs"
 

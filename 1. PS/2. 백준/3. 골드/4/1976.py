@@ -33,22 +33,17 @@ if __name__ == "__main__":
     m = int(input())
 
     graph = [[] for _ in range(n)]
+    parent = [i for i in range(n)]
 
     for i in range(n):
         temp = list(map(int, input().split()))
 
         for j, value in enumerate(temp):
             if value == 1:
-                graph[i].append(j)
+                if find(parent, i) != find(parent, j):
+                    union(parent, i, j)
 
     plan = list(map(lambda x: int(x)-1, input().split()))
-
-    parent = [i for i in range(n)]
-
-    for i, values in enumerate(graph):
-        for value in values:
-            if find(parent, i) != find(parent, value):
-                union(parent, i, value)
 
     if check_plan(plan, parent):
         print("YES")

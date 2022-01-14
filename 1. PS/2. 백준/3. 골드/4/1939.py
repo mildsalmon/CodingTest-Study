@@ -10,6 +10,7 @@ Email   : mildsalmon@gamil.com
 
 from collections import deque
 
+
 def bfs(max_root):
     global src, dest, n, islands
 
@@ -21,12 +22,17 @@ def bfs(max_root):
     while q:
         island = q.popleft()
 
+        # 이 부분이 시간 초과를 해결하는 부분이다.
+        if visited[dest]:
+            break
+
         for next_weight, next_island in islands[island]:
             if not visited[next_island] and next_weight >= max_root:
                 q.append(next_island)
                 visited[next_island] = True
 
     return visited[dest]
+
 
 def binary_search(max_root, min_root):
     result = min_root
@@ -44,6 +50,7 @@ def binary_search(max_root, min_root):
 
     return int(result)
 
+
 if __name__ == "__main__":
     # 섬, 다리
     n, m = list(map(int, input().split()))
@@ -53,10 +60,10 @@ if __name__ == "__main__":
     for i in range(m):
         a, b, weight = list(map(int, input().split()))
 
-        islands[a-1].append((weight, b-1))
-        islands[b-1].append((weight, a-1))
+        islands[a - 1].append((weight, b - 1))
+        islands[b - 1].append((weight, a - 1))
 
-    src, dest = list(map(lambda x: int(x)-1, input().split()))
+    src, dest = list(map(lambda x: int(x) - 1, input().split()))
 
     max_root, min_root = 1e9, 1
 

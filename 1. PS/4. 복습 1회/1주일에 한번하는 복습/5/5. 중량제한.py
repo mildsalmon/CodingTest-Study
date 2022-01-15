@@ -9,48 +9,59 @@ Email   : mildsalmon@gamil.com
 """
 
 import sys
+from collections import deque
 
 input = sys.stdin.readline
 
-def find_parent(parent, x):
-    if parent[x] != x:
-        parent[x] = find_parent(parent, parent[x])
-    return parent[x]
+def bfs(mid: int) -> bool:
+    global islands, src, dest, n
 
-def union_parent(parent, a, b):
-    a = find_parent(parent, a)
-    b = find_parent(parent, b)
+    q = deque()
+    q.append(src)
 
-    if a > b:
-        parent[a] = b
-    elif a < b:
-        parent[b] = a
+    visited = [False] * n
+    visited[src] = True
 
-def check_max_weight(bridges):
-    parent = [i for i in range(n)]
+    while q:
+        node = q.popleft()
 
-    for bridge in bridges:
-        weight, a_island, b_island = bridge
-
-        union_parent(parent, a_island, b_island)
-
-        if find_parent(parent, src) == find_parent(parent, dest):
-            max_weight = weight
+        if visited[dest]:
             break
 
-    return max_weight
+        for island in islands[node]:
+            weight, a = island
+
+            if not visited[a] and weight >= mid:
+                visited[a] = True
+                q.append(a)
+
+    return visited[dest]
+
+def binary_search(start: int, end: int) -> int:
+    max_weight = 0
+
+    while start <= end:
+        mid = (start + end) // 2
+
+        if bfs(mid):
+            max_weight = mid
+            start = mid + 1
+        else:
+            end = mid - 1
+
+    return int(max_weight)
 
 if __name__ == "__main__":
     n, m = list(map(int, input().split()))
 
-    bridges = []
+    islands = [[] for _ in range(n)]
 
     for _ in range(m):
         a_island, b_island, weight = list(map(int, input().split()))
-        bridges.append((weight, a_island-1, b_island-1))
+
+        islands[b_island-1].append((weight, a_island-1))
+        islands[a_island-1].append((weight, b_island-1))
 
     src, dest = list(map(lambda x: int(x)-1, input().split()))
 
-    bridges.sort(key=lambda x: -x[0])
-
-    print(check_max_weight(bridges))
+    print(binary_search(1, 1e9))

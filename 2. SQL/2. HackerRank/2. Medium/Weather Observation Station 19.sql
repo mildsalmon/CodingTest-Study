@@ -7,3 +7,7 @@ url     : https://www.hackerrank.com/challenges/weather-observation-station-19/p
 Author  : 김학진 (mildsalmon)
 Email   : mildsalmon@gamil.com
 */
+
+SELECT ROUND(SQRT(POWER(MAX(lat_n) - MIN(lat_n) , 2) + POWER(MAX(long_w) - MIN(long_w), 2)), 4)
+FROM station
+;

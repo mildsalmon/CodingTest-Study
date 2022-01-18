@@ -13,7 +13,19 @@ from collections import deque
 
 input = sys.stdin.readline
 
-def bfs(graph, red_ball, blue_ball, hall, walls):
+def move_ball(x, y, d):
+    global graph
+
+    count = 0
+
+    while graph[x + d[0]][y + d[1]] != '#' and graph[x][y] != 'O':
+        x += d[0]
+        y += d[1]
+        count += 1
+
+    return x, y, count
+
+def bfs(graph, red_ball, blue_ball):
     ds = ((0, 1), (0, -1), (1, 0), (-1, 0))
 
     move = 0
@@ -29,72 +41,29 @@ def bfs(graph, red_ball, blue_ball, hall, walls):
         r_x, r_y, b_x, b_y, move = q.popleft()
 
         if move >= 10:
-            continue
+            break
         else:
             move += 1
 
         for d in ds:
-            dr_x = r_x + d[0]
-            dr_y = r_y + d[1]
-            db_x = b_x + d[0]
-            db_y = b_y + d[1]
-            flag = True
+            dr_x, dr_y, r_c = move_ball(r_x, r_y, d)
+            db_x, db_y, b_c = move_ball(b_x, b_y, d)
 
-            red_stop = False
-            blue_stop = False
+            if graph[db_x][db_y] != 'O':
+                if graph[dr_x][dr_y] == 'O':
+                    return True
 
-            red_hall_in = False
-            blue_hall_in = False
-
-            while flag:
-                # if graph[dr_x][dr_y] == '#' and graph[db_x][db_y] == '#':
-                if red_stop and blue_stop:
-                    flag = False
-                    if not(dr_x - d[0] == r_x and dr_y - d[1] == r_y):
+                if dr_x == db_x and dr_y == db_y:
+                    if r_c > b_c:
                         dr_x -= d[0]
                         dr_y -= d[1]
+                    elif r_c < b_c:
                         db_x -= d[0]
                         db_y -= d[1]
 
-                        if (dr_x, dr_y, db_x, db_y) not in visited:
-                            visited.add((dr_x, dr_y, db_x, db_y))
-                            q.append((dr_x, dr_y, db_x, db_y, move))
-                else:
-                    if dr_x == db_x and dr_y == db_y:
-                        # 두 볼이 동시에 같은 방향으로 움직이면 절대 같은 좌표가 될 수 없다.
-                        # 다만, 한개의 볼이 멈춰있을 경우에는 가능하다.
-                        # 따라서, 두 볼의 좌표가 같은 경우에는 하나의 볼은 무조건 멈춰있다. 동시에 멈춰있을 수 없다.
-                            # 그래서 elif 사용함.
-                        if red_stop:
-                            db_x -= d[0]
-                            db_y -= d[1]
-                            blue_stop = True
-                        elif blue_stop:
-                            dr_x -= d[0]
-                            dr_y -= d[1]
-                            red_stop = True
-
-                        continue
-
-                    if graph[dr_x][dr_y] != '#':
-                        if graph[dr_x][dr_y] == 'O':
-                            red_hall_in = True
-                        dr_x += d[0]
-                        dr_y += d[1]
-                    else:
-                        red_stop = True
-
-                    if graph[db_x][db_y] != '#':
-                        if graph[db_x][db_y] == 'O':
-                            blue_hall_in = True
-                        db_x += d[0]
-                        db_y += d[1]
-                    else:
-                        blue_stop = True
-
-            if not blue_hall_in:
-                if red_hall_in:
-                    return True
+                if (dr_x, dr_y, db_x, db_y) not in visited:
+                    visited.add((dr_x, dr_y, db_x, db_y))
+                    q.append((dr_x, dr_y, db_x, db_y, move))
 
     return False
 
@@ -112,13 +81,9 @@ if __name__ == "__main__":
                 blue_ball = [i, j]
             elif temp[j] == 'R':
                 red_ball = [i, j]
-            elif temp[j] == 'O':
-                hall = [i, j]
-            elif temp[j] == '#':
-                walls.add((i, j))
         graph.append(temp)
 
-    if bfs(graph, red_ball, blue_ball, hall, walls):
+    if bfs(graph, red_ball, blue_ball):
         print(1)
     else:
         print(0)

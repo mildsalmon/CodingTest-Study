@@ -92,10 +92,9 @@ def bfs(graph, red_ball, blue_ball, hall, walls):
                     else:
                         blue_stop = True
 
-            if blue_hall_in:
-                return False
-            if red_hall_in:
-                return True
+            if not blue_hall_in:
+                if red_hall_in:
+                    return True
 
     return False
 

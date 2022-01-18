@@ -2,7 +2,7 @@
 Date    : 2022.01.17
 Update  : 2022.01.17
 Source  : 4256.py
-Purpose :
+Purpose : 트리 / 재귀 / 분할 정복
 url     : https://www.acmicpc.net/problem/4256
 Author  : 김학진 (mildsalmon)
 Email   : mildsalmon@gamil.com

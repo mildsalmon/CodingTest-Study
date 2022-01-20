@@ -8,44 +8,39 @@ Author  : 김학진 (mildsalmon)
 Email   : mildsalmon@gamil.com
 """
 
-def move(graph, x, y, d):
+def move(graph, x, y, d, is_wall):
     global clean_area
-
-    clean_area += 1
-    graph[x][y] = 2
-
-    dfs(graph, x, y, d)
-
-
-
-def dfs(graph, x, y, d):
     ds = ((-1, 0), (0, 1), (1, 0), (0, -1))
 
-    count = 0
+    while not is_wall:
+        if graph[x][y] != 2:
+            clean_area += 1
+            graph[x][y] = 2
 
-    for i in range(4):
-        d = (d - 1) % 4
+        count = 0
 
-        dx = x + ds[d][0]
-        dy = y + ds[d][1]
+        for i in range(4):
+            d = (d - 1) % 4
 
-        count += 1
+            dx = x + ds[d][0]
+            dy = y + ds[d][1]
 
-        if graph[dx][dy] != 1:
-            if graph[dx][dy] == 0:
-                move(graph, dx, dy, d)
+            if graph[dx][dy] != 1:
+                if graph[dx][dy] == 0:
+                    x, y = dx, dy
+                    break
 
-    if count == 4:
-        dx = x - ds[d][0]
-        dy = y - ds[d][1]
+            count += 1
 
-        if graph[dx][dy] == 1:
-            print(clean_area)
-            exit(0)
-        else:
-            dfs(graph, dx, dy, d)
+        if count == 4:
+            dx = x - ds[d][0]
+            dy = y - ds[d][1]
 
-    return False
+            if graph[dx][dy] == 1:
+                print(clean_area)
+                is_wall = True
+            else:
+                x, y = dx, dy
 
 
 if __name__ == "__main__":
@@ -60,5 +55,5 @@ if __name__ == "__main__":
 
     clean_area = 0
 
-    move(graph, r, c, d)
+    move(graph, r, c, d, False)
 

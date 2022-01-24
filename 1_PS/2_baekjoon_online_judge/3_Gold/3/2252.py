@@ -12,13 +12,18 @@ from collections import deque
 
 input = sys.stdin.readline
 
+
 def topology_sort(indegree: list) -> list:
     global lines
 
     q = deque()
 
-    for i, value in enumerate(indegree):
-        if value == 0:
+    '''
+    enumerate로 q에 student를 삽입하면, 0번째 인덱스가 반드시 들어가는 비효율적인 구조가 되어서, range로 변경함.
+    '''
+    # for i, value in enumerate(indegree):
+    for i in range(1, len(indegree)):
+        if indegree[i] == 0:
             q.append(i)
 
     answer = []
@@ -33,7 +38,8 @@ def topology_sort(indegree: list) -> list:
             if indegree[next_student] == 0:
                 q.append(next_student)
 
-    return answer[:0:-1]
+    return answer[::-1]
+
 
 if __name__ == "__main__":
     n, m = list(map(int, input().split()))

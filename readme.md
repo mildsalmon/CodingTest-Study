@@ -68,7 +68,7 @@
 
 ### D. 데이터
 
-##### a. 크로스 집계
+#### a. 크로스 집계
 
 > 트랜잭션 테이블을 크로스 테이블로 변환하는 크로스 집계, 즉 Pivot을 진행했다.
 
@@ -80,7 +80,7 @@
 
     - [HackerRank - pivot - Occupations (Github)](https://github.com/mildsalmon/CodingTest-Study/commits/master/2.%20SQL/2.%20HackerRank/2.%20Medium/Occupations.sql)
 
-##### b. DAG (Directed Acyclic Graph, 방향성 비순환 그래프)
+#### b. DAG (Directed Acyclic Graph, 방향성 비순환 그래프)
 
 > 방향을 가지는 그래프이지만, 사이클을 생성하지 않는 그래프이다. 작업의 우선순위에 따라 선행작업을 먼저 처리한다. DAG에서는 위상 정렬을 사용하여 우선순위를 표현한다. 
 > 

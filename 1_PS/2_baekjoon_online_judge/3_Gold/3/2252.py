@@ -2,7 +2,7 @@
 Date    : 2022.01.25
 Update  : 2022.01.25
 Source  : 2252.py
-Purpose :
+Purpose : 위상 정렬 / DAG / BFS
 url     : https://www.acmicpc.net/problem/2252
 Author  : 김학진 (mildsalmon)
 Email   : mildsalmon@gamil.com

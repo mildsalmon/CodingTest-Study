@@ -11,15 +11,16 @@ Email   : mildsalmon@gamil.com
 import sys
 
 input = sys.stdin.readline
+sys.setrecursionlimit(100_000)
 
 
-def find_parent(parent, x):
+def find_parent(parent: list, x: int) -> int:
     if parent[x] != x:
         parent[x] = find_parent(parent, parent[x])
     return parent[x]
 
 
-def union_parent(parent, a, b):
+def union_parent(parent: list, a: int, b: int) -> None:
     a = find_parent(parent, a)
     b = find_parent(parent, b)
 

@@ -8,24 +8,37 @@ Author  : 김학진 (mildsalmon)
 Email   : mildsalmon@gamil.com
 */
 
-SELECT wands.id,
-    wands_p.age,
-    wands.coins_needed,
-    wands.power
-FROM wands
-    JOIN (
-        SELECT code, age
-        FROM wands_property
-        WHERE is_evil = 0
-    ) wands_p
-        ON (wands.code = wands_p.code)
-WHERE (wands.coins_needed, wands.code, wands.power) IN (
-                        SELECT MIN(coins_needed) AS coin,
-                            wands.code,
-                            wands.power
-                        FROM wands
-                        GROUP BY code, power
-                    )
-ORDER BY wands.power DESC,
-    wands_p.age DESC
+WITH
+DISTINCT_WAND AS (
+    SELECT A.id,
+           A.code,
+           A.coins_needed,
+           A.power
+    FROM WANDS A
+    WHERE (A.code,
+           A.power,
+           A.coins_needed) IN (
+        SELECT DISTINCT(B.code),
+                        B.power,
+                        MIN(B.coins_needed)
+        FROM WANDS B
+        GROUP BY B.code, B.power
+        )
+),
+NON_EVIL_WANDS AS (
+    SELECT code,
+           age
+    FROM WANDS_PROPERTY
+    WHERE is_evil = 0
+)
+
+SELECT D_W.id,
+       N_E_W.age,
+       D_W.coins_needed,
+       D_W.power
+FROM DISTINCT_WAND D_W
+    JOIN NON_EVIL_WANDS N_E_W
+        ON (D_W.code = N_E_W.code)
+ORDER BY D_W.power DESC,
+         N_E_W.age DESC
 ;

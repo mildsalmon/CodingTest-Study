@@ -23,7 +23,6 @@ FROM (
         ) NC
             ON (S.challenge_id = NC.C_id)
     WHERE S.score = NC.max_score
-    GROUP BY S.hacker_id, C_id
 ) NH
     LEFT OUTER JOIN Hackers H
         ON (NH.hacker_id = H.hacker_id)

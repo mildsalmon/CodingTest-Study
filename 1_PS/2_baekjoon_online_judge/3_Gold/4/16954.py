@@ -2,7 +2,7 @@
 Date    : 2022.01.27
 Update  : 2022.01.27
 Source  : 16954.py
-Purpose :
+Purpose : bfs / 메모이제이션
 url     : https://www.acmicpc.net/problem/16954
 Author  : 김학진 (mildsalmon)
 Email   : mildsalmon@gamil.com
@@ -11,7 +11,7 @@ Email   : mildsalmon@gamil.com
 from collections import deque
 
 
-def bfs(init_pos, walls):
+def bfs(init_pos: list, walls_list: list) -> int:
     global chess_map_size
 
     q = deque()
@@ -29,7 +29,11 @@ def bfs(init_pos, walls):
         if x == 0 and y == 7:
             return 1
 
-        temp_walls = map_move(walls, stage)
+        if stage >= chess_map_size:
+            return 1
+
+        # temp_walls = map_move(walls, stage)
+        temp_walls = walls_list[stage]
 
         if (x, y) in temp_walls:
             continue
@@ -41,12 +45,14 @@ def bfs(init_pos, walls):
             if 0 <= dx < chess_map_size and 0 <= dy < chess_map_size:
                 # if chess_map[dx][dy] == '.':
                 if (dx, dy) not in temp_walls:
-                    q.append([dx, dy, stage + 1])
+                    q.append([dx, dy, stage+1])
 
     return 0
 
 
-def map_move(walls, stage):
+def map_move(walls: set, stage: int) -> list:
+    walls_list = [walls]
+
     for _ in range(stage):
         temp_walls = set()
 
@@ -59,8 +65,9 @@ def map_move(walls, stage):
             else:
                 temp_walls.add((x, y))
         walls = temp_walls
+        walls_list.append(walls)
 
-    return walls
+    return walls_list
 
 
 if __name__ == "__main__":
@@ -77,6 +84,6 @@ if __name__ == "__main__":
                 walls.add((i, j))
 
     init_pos = [7, 0]
+    walls_list = map_move(walls, chess_map_size)
 
-    print(bfs(init_pos, walls))
-
+    print(bfs(init_pos, walls_list))

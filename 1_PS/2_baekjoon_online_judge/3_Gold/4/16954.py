@@ -20,7 +20,7 @@ def bfs(init_pos, walls):
     ds = (
         (-1, -1), (-1, 0), (-1, 1),
         (0, -1), (0, 0), (0, 1),
-        # (1, -1), (1, 0), (1, 1)
+        (1, -1), (1, 0), (1, 1)
     )
 
     while q:
@@ -73,5 +73,6 @@ if __name__ == "__main__":
     init_pos = [7, 0]
 
     print(bfs(init_pos, walls))
+
 
 

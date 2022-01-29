@@ -9,8 +9,7 @@ Email   : mildsalmon@gamil.com
 */
 
 SELECT h.hacker_id,
-    h.name,
-    cnt
+    h.name
 FROM (
     SELECT s.hacker_id AS id,
         COUNT(s.hacker_id) AS cnt
@@ -26,7 +25,7 @@ FROM (
     WHERE s.score = challenge_score.max_score
     GROUP BY s.hacker_id
     HAVING COUNT(s.hacker_id) >= 2
-    ORDER BY cnt DESC, id ASC
 ) full_score_hacker LEFT OUTER JOIN hackers h
     ON (full_score_hacker.id = h.hacker_id)
+ORDER BY cnt DESC, id ASC
 ;

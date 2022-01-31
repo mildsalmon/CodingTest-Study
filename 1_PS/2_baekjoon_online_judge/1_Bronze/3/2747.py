@@ -8,18 +8,22 @@ Author  : 김학진 (mildsalmon)
 Email   : mildsalmon@gamil.com
 """
 
-if __name__ == "__main__":
-    n = int(input())
+def fibo(n):
     num1 = 0
     num2 = 1
 
     if n == 0:
-        print(num1)
+        return num1
     if n == 1:
-        print(num2)
+        return num2
 
     for i in range(2, n+1):
         num2 += num1
         num1 = num2 - num1
 
-    print(num2)
+    return num2
+
+if __name__ == "__main__":
+    n = int(input())
+
+    print(fibo(n))

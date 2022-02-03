@@ -12,6 +12,24 @@ import sys
 
 input = sys.stdin.readline
 
+def dp(stairs):
+    global n
+
+    dp = [0 for _ in range(n)]
+
+    if n <= 2:
+        return sum(stairs[:])
+
+    dp[0] = stairs[0]
+    dp[1] = stairs[0] + stairs[1]
+    dp[2] = max(stairs[0], stairs[1]) + stairs[2]
+
+    for i in range(3, n):
+        dp[i] = max(stairs[i-1] + dp[i-3], dp[i-2]) + stairs[i]
+
+    return dp[n-1]
+
+
 if __name__ == "__main__":
     n = int(input())
     stairs = []
@@ -20,32 +38,4 @@ if __name__ == "__main__":
         temp = int(input())
         stairs.append(temp)
 
-    max_score = stairs[n-1]
-    i = n-1
-    sequence = False
-
-    while True:
-        if i == 0:
-            break
-        elif i == 1:
-            if sequence:
-                break
-            else:
-                max_score += stairs[i-1]
-                break
-
-        if sequence:
-            max_score += stairs[i-2]
-            i -= 2
-            sequence = False
-        else:
-            if stairs[i-1] <= stairs[i-2]:
-                max_score += stairs[i - 2]
-                i -= 2
-                sequence = False
-            elif stairs[i-1] > stairs[i-2]:
-                max_score += stairs[i-1]
-                i -= 1
-                sequence = True
-
-    print(max_score)
+    print(dp(stairs))

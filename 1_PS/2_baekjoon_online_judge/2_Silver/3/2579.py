@@ -15,10 +15,7 @@ input = sys.stdin.readline
 def dp(stairs):
     global n
 
-    dp = [0 for _ in range(n)]
-
-    if n <= 2:
-        return sum(stairs[:])
+    dp = [0 for _ in range(301)]
 
     dp[0] = stairs[0]
     dp[1] = stairs[0] + stairs[1]
@@ -32,10 +29,10 @@ def dp(stairs):
 
 if __name__ == "__main__":
     n = int(input())
-    stairs = []
+    stairs = [0 for _ in range(301)]
 
-    for _ in range(n):
+    for i in range(n):
         temp = int(input())
-        stairs.append(temp)
+        stairs[i] = temp
 
     print(dp(stairs))

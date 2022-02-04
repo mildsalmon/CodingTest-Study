@@ -24,24 +24,28 @@ if __name__ == "__main__":
 
     dp[0] = grapes[0]
     dp[1] = grapes[0] + grapes[1]
-    dp[2] = max(dp[0], grapes[1]) + grapes[2]
+    dp[2] = max(grapes[1] + grapes[2], grapes[0] + grapes[2], dp[1])
 
     for i in range(3, n):
-        dp[i] = max(dp[i-1], grapes[i] + grapes[i-1] + dp[i-3])
+        dp[i] = max(dp[i-3] + grapes[i] + grapes[i-1], dp[i-2] + grapes[i])
 
-    print(dp[n-1])
+    print(max(dp))
 
 """
 반례
 
-6
+10
+1
+1
 100
 100
 1
 1
 100
 100
+1
+1
 
-정답 : 400
-output : 301
+정답 : 402
+output : 304
 """

@@ -11,7 +11,11 @@ Email   : mildsalmon@gamil.com
 if __name__ == "__main__":
     n = int(input())
     arrays = list(map(int, input().split()))
-    temp_array = sorted(set(arrays))
+    sort_array = sorted(set(arrays))
+    dict_array = dict()
+
+    for i, array in enumerate(sort_array):
+        dict_array[array] = i
 
     for array in arrays:
-        print(temp_array.index(array), end=' ')
+        print(dict_array[array], end=' ')

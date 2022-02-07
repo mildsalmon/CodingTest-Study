@@ -19,7 +19,7 @@ if __name__ == "__main__":
     for _ in range(n):
         temp = list(map(int, input().split()))
         array.extend(temp)
+        array.sort()
+        array = array[-n:]
 
-    array.sort()
-
-    print(array[-n])
+    print(array[0])

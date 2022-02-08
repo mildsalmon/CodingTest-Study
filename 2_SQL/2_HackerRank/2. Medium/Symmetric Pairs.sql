@@ -13,10 +13,6 @@ FROM functions a
 JOIN functions b ON (a.x = b.y
                     AND a.y = b.x)
 GROUP BY a.x, a.y
-HAVING ((a.x = a.y
-        AND COUNT(a.x) >= 2)
-    OR (a.x != a.y
-        AND COUNT(a.x) >= 1))
-    AND a.x <= a.y
+HAVING COUNT(A.x) > 1 OR A.x < A.y
 ORDER BY a.x ASC
 ;

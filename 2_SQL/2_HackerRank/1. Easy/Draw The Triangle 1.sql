@@ -8,66 +8,12 @@ Author  : 김학진 (mildsalmon)
 Email   : mildsalmon@gamil.com
 */
 
-SELECT '********************'
-FROM dual
-UNION
-SELECT '*******************'
-FROM dual
-UNION
-SELECT '******************'
-FROM dual
-UNION
-SELECT '*****************'
-FROM dual
-UNION
-SELECT '****************'
-FROM dual
-UNION
-SELECT '***************'
-FROM dual
-UNION
-SELECT '**************'
-FROM dual
-UNION
-SELECT '*************'
-FROM dual
-UNION
-SELECT '************'
-FROM dual
-UNION
-SELECT '***********'
-FROM dual
-UNION
-SELECT '**********'
-FROM dual
-UNION
-SELECT '**********'
-FROM dual
-UNION
-SELECT '*********'
-FROM dual
-UNION
-SELECT '********'
-FROM dual
-UNION
-SELECT '*******'
-FROM dual
-UNION
-SELECT '******'
-FROM dual
-UNION
-SELECT '*****'
-FROM dual
-UNION
-SELECT '****'
-FROM dual
-UNION
-SELECT '***'
-FROM dual
-UNION
-SELECT '**'
-FROM dual
-UNION
-SELECT '*'
-FROM dual
+select rpad('*', x,' *')
+from(
+    SELECT LEVEL x
+    FROM DUAL
+    CONNECT BY LEVEL <= 20 * 2
+    Order by Level desc
+)
+WHERE mod(x, 2) = 0
 ;

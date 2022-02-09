@@ -2,43 +2,59 @@
 Date    : 2022.02.09
 Update  : 2022.02.09
 Source  : 1744.py
-Purpose :
+Purpose : 그리디 / 정렬 / 분할 정복?
 url     : https://www.acmicpc.net/problem/1744
 Author  : 김학진 (mildsalmon)
 Email   : mildsalmon@gamil.com
 """
 
-from itertools import combinations
+def make_max(array):
+    temp = 0
+    negative = 0
 
+    if len(array) % 2 == 1:
+        negative = array[-1]
 
-def recursive(array, result):
-    global max_num
+    for i in range(len(array)//2):
+        index = i*2
 
-    if len(array) <= 1:
-        max_num = max(max_num, sum(array) + result)
+        if array[index] == 1 or array[index+1] == 1:
+            temp += array[index] + array[index+1]
+        else:
+            temp += (array[index] * array[index+1])
 
-        return
-
-    for combi in combinations(array, 2):
-        temp_result = result
-        temp_result += combi[0] * combi[1]
-        # diff_array = array.difference(combi)
-        diff_array = array[:]
-        diff_array.remove(combi[0])
-        diff_array.remove(combi[1])
-
-        recursive(diff_array, temp_result)
-        temp_result += sum(diff_array)
-
-        max_num = max(temp_result, max_num)
+    return temp, negative
 
 
 if __name__ == "__main__":
     n = int(input())
     array = [int(input()) for _ in range(n)]
 
-    max_num = sum(array)
+    array.sort()
+    positives = []
+    negatives = []
+    zeros = []
 
-    recursive(array, 0)
+    for x in array:
+        if x > 0:
+            positives.append(x)
+        elif x < 0:
+            negatives.append(x)
+        else:
+            zeros.append(x)
 
-    print(max_num)
+    positives.reverse()
+    result = 0
+
+    negative_sum, negative = make_max(negatives)
+    positive_sum, positive = make_max(positives)
+
+    result = negative_sum + positive_sum
+
+    if len(zeros) >= 1:
+        result += positive
+    elif len(zeros) == 0:
+        result += positive + negative
+
+    print(result)
+

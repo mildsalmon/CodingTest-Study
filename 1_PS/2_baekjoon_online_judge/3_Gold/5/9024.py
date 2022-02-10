@@ -19,51 +19,28 @@ if __name__ == "__main__":
 
         array.sort()
 
-        start = 0
-        end = n-1
-        sum_dict = dict()
         answer = 0
+        mini = 1e9
 
-        while start != end:
-            num_sum = array[start] + array[end]
+        # 투포인터
+        for i in range(n):
+            start = i + 1
+            end = n - 1
 
-            if num_sum in sum_dict:
-                sum_dict[num_sum] += 1
-            elif num_sum not in sum_dict:
-                sum_dict[num_sum] = 1
+            # 이진탐색
+            while start <= end:
+                mid = (start + end) // 2
+                sum_num = array[i] + array[mid]
 
-            # if num_sum == k:
-            #     start += 1
-            #     end -= 1
-            if num_sum >= k:
-                end -= 1
-            elif num_sum < k:
-                start += 1
+                if abs(k - sum_num) < mini:
+                    answer = 1
+                    mini = abs(k - sum_num)
+                elif abs(k - sum_num) == mini:
+                    answer += 1
 
-        num_sums = sorted(sum_dict.keys())
+                if sum_num <= k:
+                    start = mid + 1
+                elif sum_num > k:
+                    end = mid - 1
 
-        for i in range(k):
-            if i == 0 and k in sum_dict:
-                answer += sum_dict[k]
-                break
-            if k-i in sum_dict:
-                answer += sum_dict[k-i]
-            if k+i in sum_dict:
-                answer += sum_dict[k+i]
-
-            if answer != 0:
-                break
-            # if i == 0 and binary_search(k):
-            #     answer += sum_dict[k]
-            #     break
-            #
-            # elif k-i in sum_dict:
-            #
-            #
-            # elif binary_search(k-i) or binary_search(k+i):
-            #     answer += sum_dict[k-i]
-            #     answer += sum_dict[k+i]
-            #     break
         print(answer)
-
-

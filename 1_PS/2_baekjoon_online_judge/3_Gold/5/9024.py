@@ -19,28 +19,36 @@ if __name__ == "__main__":
 
         array.sort()
 
+        start = 0
+        end = n-1
+        sum_dict = dict()
         answer = 0
         mini = 1e9
 
-        # 투포인터
-        for i in range(n):
-            start = i + 1
-            end = n - 1
+        while start < end:
+            num_sum = array[start] + array[end]
 
-            # 이진탐색
-            while start <= end:
-                mid = (start + end) // 2
-                sum_num = array[i] + array[mid]
+            if num_sum in sum_dict:
+                sum_dict[num_sum] += 1
+            elif num_sum not in sum_dict:
+                sum_dict[num_sum] = 1
 
-                if abs(k - sum_num) < mini:
-                    answer = 1
-                    mini = abs(k - sum_num)
-                elif abs(k - sum_num) == mini:
-                    answer += 1
+            mini = min(mini, abs(k - num_sum))
 
-                if sum_num <= k:
-                    start = mid + 1
-                elif sum_num > k:
-                    end = mid - 1
+            if num_sum >= k:
+                end -= 1
+            elif num_sum < k:
+                start += 1
+
+        if mini == 0:
+            answer = sum_dict[k]
+        else:
+            if k - mini in sum_dict:
+                answer += sum_dict[k - mini]
+            if k + mini in sum_dict:
+                answer += sum_dict[k + mini]
 
         print(answer)
+
+
+

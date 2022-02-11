@@ -2,13 +2,14 @@
 Date    : 2022.02.11
 Update  : 2022.02.11
 Source  : 15961.py
-Purpose : 투 포인터 /
+Purpose : 투 포인터 / 슬라이딩 윈도우
 url     : https://www.acmicpc.net/problem/15961
 Author  : 김학진 (mildsalmon)
 Email   : mildsalmon@gamil.com
 """
 
 import sys
+from collections import deque
 
 input = sys.stdin.readline
 
@@ -16,36 +17,31 @@ input = sys.stdin.readline
 if __name__ == "__main__":
     n, d, k, c = list(map(int, input().split()))
     belts = [int(input()) for _ in range(n)] * 2
-    eat_max = 0
 
-    belts_set = set(belts)
+    eat = deque()
+    count_array = [0 for _ in range(d+1)]
+    count = 0
+    max_eat = 0
 
-    coupon_sushi = False
+    for i, belt in enumerate(belts):
+        eat.append(belt)
 
-    if c in belts_set:
-        coupon_sushi = True
+        if count_array[belt] == 0:
+            count += 1
+        count_array[belt] += 1
 
-    for start in range(n):
-        if eat_max == k+1:
-            break
+        if i < k-1:
+            continue
 
-        end = start + k
-        temp_belts = set(belts[start:end])
+        if count_array[c] == 0:
+            max_eat = max(max_eat, count+1)
+        else:
+            max_eat = max(max_eat, count)
 
-        if len(belts[start:end]) != len(temp_belts):
-            end = len(temp_belts)
+        sushi = eat.popleft()
 
-        count = len(belts[start:end])
+        if count_array[sushi] == 1:
+            count -= 1
+        count_array[sushi] -= 1
 
-        temp_belts = set(belts[start:end])
-
-        if c not in temp_belts:
-            if coupon_sushi:
-                if c == belts[start-1] or c == belts[end]:
-                    count += 1
-            elif not coupon_sushi:
-                count += 1
-
-        eat_max = max(eat_max, count)
-
-    print(eat_max)
+    print(max_eat)

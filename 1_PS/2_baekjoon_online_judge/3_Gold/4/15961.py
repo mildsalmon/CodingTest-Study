@@ -26,17 +26,22 @@ if __name__ == "__main__":
         coupon_sushi = True
 
     for start in range(n):
-        count = 1
-        ###
-        for end in range(start, start + k - 1):
-            if belts[end+1] in belts[start:end+1]:
-                break
-            count += 1
-            end += 1
+        if eat_max == k+1:
+            break
 
-        if c not in belts[start:end+1]:
+        end = start + k
+        temp_belts = set(belts[start:end])
+
+        if len(belts[start:end]) != len(temp_belts):
+            end = len(temp_belts)
+
+        count = len(belts[start:end])
+
+        temp_belts = set(belts[start:end])
+
+        if c not in temp_belts:
             if coupon_sushi:
-                if c == belts[start-1] or c == belts[end+1]:
+                if c == belts[start-1] or c == belts[end]:
                     count += 1
             elif not coupon_sushi:
                 count += 1

@@ -9,39 +9,32 @@ Email   : mildsalmon@gamil.com
 """
 
 import sys
-from collections import deque
-
 input = sys.stdin.readline
 
 
 if __name__ == "__main__":
     n, d, k, c = list(map(int, input().split()))
-    belts = [int(input()) for _ in range(n)] * 2
-
-    eat = deque()
+    belts = [int(input()) for _ in range(n)]
     count_array = [0 for _ in range(d+1)]
-    count = 0
-    max_eat = 0
+    count_array[c] = 1e9
+    count = 1
 
-    for i, belt in enumerate(belts):
-        eat.append(belt)
-
-        if count_array[belt] == 0:
+    for i in range(k):
+        if count_array[belts[i]] == 0:
             count += 1
-        count_array[belt] += 1
+        count_array[belts[i]] += 1
 
-        if i < k-1:
-            continue
+    answer = count
 
-        if count_array[c] == 0:
-            max_eat = max(max_eat, count+1)
-        else:
-            max_eat = max(max_eat, count)
-
-        sushi = eat.popleft()
-
-        if count_array[sushi] == 1:
+    for i in range(k, n+k-1):
+        if count_array[belts[i-k]] == 1:
             count -= 1
-        count_array[sushi] -= 1
+        count_array[belts[i-k]] -= 1
 
-    print(max_eat)
+        if count_array[belts[i%n]] == 0:
+            count += 1
+        count_array[belts[i%n]] += 1
+
+        answer = max(answer, count)
+
+    print(answer)

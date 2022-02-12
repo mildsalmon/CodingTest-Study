@@ -8,21 +8,22 @@ Author  : 김학진 (mildsalmon)
 Email   : mildsalmon@gamil.com
 """
 
-import re
+def prettify(s):
+    detag = ''
+    tagged = False
+    for c in s:
+        if c == '<': tagged = True
+        elif c == '>': tagged = False
+        elif not tagged: detag+= c
+    return ' '.join(detag.split())
 
 if __name__ == '__main__':
-    html_doc = input()
-
-    html_doc = html_doc[len('<main>'): -len('</main>')]
-
-    html_doc = re.sub(r'<div +title="([\w ]*)">', r'title : \1\n', html_doc)
-    html_doc = re.sub(r'</div>', '', html_doc)
-
-    html_doc = re.sub(r'<p>', '', html_doc)
-    html_doc = re.sub(r'</p>', '\n', html_doc)
-
-    html_doc = re.sub(r'</?[\w ]*>', '', html_doc)
-    html_doc = re.sub(r' ?\n ?', '\n', html_doc)
-    html_doc = re.sub(r' {2,}', ' ', html_doc)
-
-    print(html_doc)
+    S = input()
+    S = S[6:-13]
+    S = S.split("</div>")
+    for para in S:
+        sents = para.split("<p>")
+        title = sents[0][12:-2]
+        print(f"title : {title}")
+        for sent in sents[1:]:
+            print(prettify(sent[:-4]))

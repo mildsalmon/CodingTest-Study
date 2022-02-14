@@ -11,21 +11,19 @@ Email   : mildsalmon@gamil.com
 def solution(id_list, report, k):
     report = set(report)
 
-    report_dict = dict()
+    report_dict = {key: 0 for key in id_list}
     id_dict = dict.fromkeys(id_list, 0)
 
     for value in report:
         user_id, report_id = value.split()
 
-        if report_id in report_dict:
-            report_dict[report_id].append(user_id)
-        else:
-            report_dict[report_id] = [user_id]
+        report_dict[report_id] += 1
 
-    for key, value in report_dict.items():
-        if len(value) >= k:
-            for id in value:
-                id_dict[id] += 1
+    for value in report:
+        user_id, report_id = value.split()
+
+        if report_dict[report_id] >= k:
+            id_dict[user_id] += 1
 
     return list(id_dict.values())
 

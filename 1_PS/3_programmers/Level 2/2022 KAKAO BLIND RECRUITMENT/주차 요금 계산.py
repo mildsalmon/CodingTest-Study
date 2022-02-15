@@ -7,22 +7,17 @@ url     : https://programmers.co.kr/learn/courses/30/lessons/92341
 Author  : 김학진 (mildsalmon)
 Email   : mildsalmon@gamil.com
 """
+from collections import defaultdict
 
 
 def search_parking_time(records: list) -> dict:
-    cars = dict()
+    cars = defaultdict(list)
 
     for record in records:
         time, number, action = record.split()
         hh, mm = list(map(int, time.split(':')))
         convert_time = (hh * 60) + mm
-
-        if number in cars:
-            cars[number].append([convert_time, action])
-            # cars[number].append(convert_time)
-        else:
-            cars[number] = [[convert_time, action]]
-            # cars[number] = [convert_time]
+        cars[number].append([convert_time, action])
 
     return cars
 

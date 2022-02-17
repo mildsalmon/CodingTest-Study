@@ -9,57 +9,76 @@ Email   : mildsalmon@gamil.com
 """
 
 
-def check_undestroy(board):
-    count = 0
-
-    for i in range(len(board)):
-        for j in range(len(board[0])):
-            if board[i][j] > 0:
-                count += 1
-
-    return count
-
-
 def solution(board, skill):
+    count = 0
+    imos = [[0] * (len(board[0]) + 1) for _ in range(len(board) + 1)]
+
     for s in skill:
         t, r1, c1, r2, c2, degree = s
 
-        for r in range(r1, r2 + 1):
-            for c in range(c1, c2 + 1):
-                if t == 1:
-                    board[r][c] -= degree
-                elif t == 2:
-                    board[r][c] += degree
+        # 공격
+        if t == 1:
+            imos[r1][c1] -= degree
+            imos[r1][c2 + 1] += degree
+            imos[r2 + 1][c1] += degree
+            imos[r2 + 1][c2 + 1] -= degree
+        # 회복
+        elif t == 2:
+            imos[r1][c1] += degree
+            imos[r1][c2 + 1] -= degree
+            imos[r2 + 1][c1] -= degree
+            imos[r2 + 1][c2 + 1] += degree
 
-    return check_undestroy(board)
+    for row in range(len(imos)):
+        row_sum = 0
+
+        for column in range(len(imos[0])):
+            imos[row][column] += row_sum
+            row_sum = imos[row][column]
+
+    for column in range(len(imos[0])):
+        column_sum = 0
+
+        for row in range(len(imos)):
+            imos[row][column] += column_sum
+            column_sum = imos[row][column]
+
+    for row in range(len(board)):
+        for column in range(len(board[0])):
+            board[row][column] += imos[row][column]
+
+            if board[row][column] > 0:
+                count += 1
+
+    return count
 
 # 채점을 시작합니다.
 #
 # 정확성  테스트
 #
-# 테스트 1 〉	통과 (0.01ms, 10.2MB)
-# 테스트 2 〉	통과 (0.04ms, 10.1MB)
-# 테스트 3 〉	통과 (0.17ms, 9.94MB)
-# 테스트 4 〉	통과 (0.60ms, 10.1MB)
-# 테스트 5 〉	통과 (0.94ms, 10.2MB)
-# 테스트 6 〉	통과 (1.89ms, 10.2MB)
-# 테스트 7 〉	통과 (3.12ms, 10.2MB)
-# 테스트 8 〉	통과 (4.77ms, 9.99MB)
-# 테스트 9 〉	통과 (6.43ms, 10.3MB)
-# 테스트 10 〉	통과 (13.10ms, 10.4MB)
+# 테스트 1 〉	통과 (0.01ms, 10.3MB)
+# 테스트 2 〉	통과 (0.07ms, 10.3MB)
+# 테스트 3 〉	통과 (0.20ms, 10.3MB)
+# 테스트 4 〉	통과 (0.40ms, 10.4MB)
+# 테스트 5 〉	통과 (0.72ms, 10.3MB)
+# 테스트 6 〉	통과 (1.11ms, 10.4MB)
+# 테스트 7 〉	통과 (1.54ms, 10.4MB)
+# 테스트 8 〉	통과 (2.15ms, 10.3MB)
+# 테스트 9 〉	통과 (2.60ms, 10.4MB)
+# 테스트 10 〉	통과 (4.13ms, 10.4MB)
 #
 # 효율성  테스트
 #
-# 테스트 1 〉	실패 (시간 초과)
-# 테스트 2 〉	실패 (시간 초과)
-# 테스트 3 〉	실패 (시간 초과)
-# 테스트 4 〉	실패 (시간 초과)
-# 테스트 5 〉	실패 (시간 초과)
-# 테스트 6 〉	실패 (시간 초과)
-# 테스트 7 〉	실패 (시간 초과)
+# 테스트 1 〉	통과 (814.75ms, 143MB)
+# 테스트 2 〉	통과 (997.79ms, 143MB)
+# 테스트 3 〉	통과 (936.44ms, 143MB)
+# 테스트 4 〉	통과 (809.51ms, 143MB)
+# 테스트 5 〉	통과 (608.92ms, 132MB)
+# 테스트 6 〉	통과 (625.43ms, 132MB)
+# 테스트 7 〉	통과 (580.11ms, 132MB)
 #
 # 채점 결과
 #
 # 정확성: 53.8
-# 효율성: 0.0
-# 합계: 53.8 / 100.0
+# 효율성: 46.2
+# 합계: 100.0 / 100.0

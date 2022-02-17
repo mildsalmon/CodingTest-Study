@@ -30,18 +30,12 @@ def solution(board, skill):
             imos[r2 + 1][c2 + 1] += degree
 
     for row in range(len(imos)):
-        row_sum = 0
-
-        for column in range(len(imos[0])):
-            imos[row][column] += row_sum
-            row_sum = imos[row][column]
+        for column in range(1, len(imos[0])):
+            imos[row][column] += imos[row][column - 1]
 
     for column in range(len(imos[0])):
-        column_sum = 0
-
-        for row in range(len(imos)):
-            imos[row][column] += column_sum
-            column_sum = imos[row][column]
+        for row in range(1, len(imos)):
+            imos[row][column] += imos[row - 1][column]
 
     for row in range(len(board)):
         for column in range(len(board[0])):
@@ -56,26 +50,26 @@ def solution(board, skill):
 #
 # 정확성  테스트
 #
-# 테스트 1 〉	통과 (0.01ms, 10.3MB)
-# 테스트 2 〉	통과 (0.07ms, 10.3MB)
+# 테스트 1 〉	통과(0.02ms, 10.2MB)
+# 테스트 2 〉	통과 (0.07ms, 10.5MB)
 # 테스트 3 〉	통과 (0.20ms, 10.3MB)
-# 테스트 4 〉	통과 (0.40ms, 10.4MB)
-# 테스트 5 〉	통과 (0.72ms, 10.3MB)
-# 테스트 6 〉	통과 (1.11ms, 10.4MB)
-# 테스트 7 〉	통과 (1.54ms, 10.4MB)
-# 테스트 8 〉	통과 (2.15ms, 10.3MB)
-# 테스트 9 〉	통과 (2.60ms, 10.4MB)
-# 테스트 10 〉	통과 (4.13ms, 10.4MB)
+# 테스트 4 〉	통과 (0.42ms, 10.2MB)
+# 테스트 5 〉	통과 (1.31ms, 10.4MB)
+# 테스트 6 〉	통과 (1.08ms, 10.3MB)
+# 테스트 7 〉	통과 (1.58ms, 10.2MB)
+# 테스트 8 〉	통과 (2.05ms, 10.5MB)
+# 테스트 9 〉	통과 (2.65ms, 10.3MB)
+# 테스트 10 〉	통과 (4.54ms, 10.4MB)
 #
 # 효율성  테스트
 #
-# 테스트 1 〉	통과 (814.75ms, 143MB)
-# 테스트 2 〉	통과 (997.79ms, 143MB)
-# 테스트 3 〉	통과 (936.44ms, 143MB)
-# 테스트 4 〉	통과 (809.51ms, 143MB)
-# 테스트 5 〉	통과 (608.92ms, 132MB)
-# 테스트 6 〉	통과 (625.43ms, 132MB)
-# 테스트 7 〉	통과 (580.11ms, 132MB)
+# 테스트 1 〉	통과 (952.45ms, 143MB)
+# 테스트 2 〉	통과 (978.83ms, 143MB)
+# 테스트 3 〉	통과 (948.02ms, 143MB)
+# 테스트 4 〉	통과 (1019.89ms, 143MB)
+# 테스트 5 〉	통과 (582.06ms, 132MB)
+# 테스트 6 〉	통과 (606.55ms, 132MB)
+# 테스트 7 〉	통과 (658.22ms, 132MB)
 #
 # 채점 결과
 #

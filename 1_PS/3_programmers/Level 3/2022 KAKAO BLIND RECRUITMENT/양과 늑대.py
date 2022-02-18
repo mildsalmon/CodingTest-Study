@@ -2,17 +2,48 @@
 Date    : 2022.02.18
 Update  : 2022.02.18
 Source  : 양과 늑대.py
-Purpose : dfs
+Purpose : dfs / 비트마스킹
 url     : https://programmers.co.kr/learn/courses/30/lessons/92343
 Author  : 김학진 (mildsalmon)
 Email   : mildsalmon@gamil.com
 """
 
 
-from collections import deque
+def dfs(node: int, way: list, visited: list, wolf: int, sheep: int) -> None:
+    global graph, answer, copy_info
+
+    if visited[node]:
+        return
+    visited[node] = True
+
+    if copy_info[node] == 0:
+        sheep += 1
+        answer = max(answer, sheep)
+    elif copy_info[node] == 1:
+        wolf += 1
+
+    if sheep <= wolf:
+        return
+
+    way.extend(graph[node])
+
+    for next_node in way:
+        new_way = []
+
+        for w in way:
+            if w == next_node:
+                continue
+            if visited[w]:
+                continue
+            new_way.append(w)
+
+        dfs(next_node, new_way, visited[:], wolf, sheep)
 
 
 def solution(info, edges):
+    global graph, answer, copy_info
+
+    copy_info = info[:]
     answer = 0
     graph = [[] for _ in range(len(info))]
     visited = [False for _ in range(len(info))]
@@ -23,59 +54,38 @@ def solution(info, edges):
         graph[parent].append(child)
 
     wolf = 0
-    sheep = 1
-    q = deque()
+    sheep = 0
+    node = 0
+    way = []
 
-    visited[0] = True
-    for next_node in graph[0]:
-        q.append([visited[:], next_node, wolf, sheep])
+    dfs(node, way, visited, wolf, sheep)
 
-    while q:
-        # print(q)
-        visit, node, wolf, sheep = q.popleft()
-
-        if info[node] == 0:
-            sheep += 1
-            answer = max(answer, sheep)
-        elif info[node] == 1:
-            wolf += 1
-
-        if sheep <= wolf:
-            continue
-
-        visit[node] = True
-
-        for i, v in enumerate(visit):
-            if v:
-                for next_node in graph[i]:
-                    if not visit[next_node]:
-                        q.append([visit, next_node, wolf, sheep])
     return answer
 
 # 채점을 시작합니다.
 #
 # 정확성  테스트
 #
-# 테스트 1 〉	실패 (0.01ms, 10.3MB)
-# 테스트 2 〉	실패 (0.40ms, 10.2MB)
-# 테스트 3 〉	통과 (0.01ms, 10.2MB)
-# 테스트 4 〉	통과 (0.01ms, 10.1MB)
-# 테스트 5 〉	실패 (0.37ms, 10.2MB)
-# 테스트 6 〉	실패 (0.15ms, 10.4MB)
-# 테스트 7 〉	실패 (0.10ms, 10.2MB)
-# 테스트 8 〉	실패 (0.28ms, 10.2MB)
-# 테스트 9 〉	통과 (0.57ms, 10.3MB)
-# 테스트 10 〉	통과 (0.85ms, 10.2MB)
-# 테스트 11 〉	실패 (0.74ms, 10MB)
-# 테스트 12 〉	실패 (0.71ms, 10.2MB)
-# 테스트 13 〉	실패 (0.18ms, 10.2MB)
-# 테스트 14 〉	실패 (0.21ms, 10.2MB)
-# 테스트 15 〉	실패 (0.41ms, 10.2MB)
-# 테스트 16 〉	실패 (1.24ms, 10MB)
-# 테스트 17 〉	통과 (1.14ms, 10.2MB)
-# 테스트 18 〉	통과 (0.10ms, 10.3MB)
+# 테스트 1 〉	통과 (0.01ms, 10.4MB)
+# 테스트 2 〉	통과 (0.19ms, 10.2MB)
+# 테스트 3 〉	통과 (0.01ms, 10.3MB)
+# 테스트 4 〉	통과 (0.01ms, 10.2MB)
+# 테스트 5 〉	통과 (0.23ms, 10.2MB)
+# 테스트 6 〉	통과 (0.20ms, 10.2MB)
+# 테스트 7 〉	통과 (0.05ms, 10.3MB)
+# 테스트 8 〉	통과 (0.05ms, 10.2MB)
+# 테스트 9 〉	통과 (0.46ms, 10.4MB)
+# 테스트 10 〉	통과 (5.28ms, 10.4MB)
+# 테스트 11 〉	통과 (0.16ms, 10.2MB)
+# 테스트 12 〉	통과 (1.33ms, 10.2MB)
+# 테스트 13 〉	통과 (0.03ms, 10.2MB)
+# 테스트 14 〉	통과 (0.05ms, 10.4MB)
+# 테스트 15 〉	통과 (0.42ms, 10.3MB)
+# 테스트 16 〉	통과 (0.74ms, 10.4MB)
+# 테스트 17 〉	통과 (11.07ms, 10.2MB)
+# 테스트 18 〉	통과 (0.51ms, 10.3MB)
 #
 # 채점 결과
 #
-# 정확성: 33.3
-# 합계: 33.3 / 100.0
+# 정확성: 100.0
+# 합계: 100.0 / 100.0

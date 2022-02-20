@@ -11,7 +11,7 @@ Email   : mildsalmon@gamil.com
 import re
 
 
-def change(num):
+def change(num: int) -> str:
     result = ''
 
     for temp in str(num):
@@ -31,7 +31,7 @@ def change(num):
     return result
 
 
-def calculation(re_s, oper):
+def calculation(re_s: list, oper: list) -> str:
     expression = f'{re_s[0]}'
     result = re_s[0]
 
@@ -56,13 +56,14 @@ def calculation(re_s, oper):
     return expression
 
 
-if __name__ == "__main__":
-    s = input()
+def check(num: str) -> bool:
+    for s in num:
+        if s.isalpha():
+            return False
+    return True
 
-    oper = re.sub(r'[A-Z]', r' ', s).split()
-    s = re.sub(r'[+x/=-]', r' ', s)
-    re_s = []
 
+def convert_num(s: str, re_s: list) -> bool:
     for temp in s.split():
         temp = re.sub(r'ZERO', r'0', temp)
         temp = re.sub(r'ONE', r'1', temp)
@@ -75,11 +76,23 @@ if __name__ == "__main__":
         temp = re.sub(r'EIGHT', r'8', temp)
         temp = re.sub(r'NINE', r'9', temp)
 
-        re_s.append(int(temp))
+        if check(temp):
+            re_s.append(int(temp))
+        else:
+            return False
 
-    result = calculation(re_s, oper)
+    return True
 
-    if result == 'Madness!':
+
+if __name__ == "__main__":
+    s = input()
+
+    oper = re.sub(r'[A-Z]', r' ', s).split()
+    s = re.sub(r'[+x/=-]', r' ', s)
+    re_s = []
+
+    if convert_num(s, re_s):
+        result = calculation(re_s, oper)
         print(result)
     else:
-        print(result)
+        print("Madness!")

@@ -19,8 +19,7 @@ if __name__ == "__main__":
         temp = re.sub(r'\D', ' ', s)
 
         for t in temp.split():
-            ttemp = re.sub(r'0*(\d)', r'\1', t)
-            re_arr.append(int(ttemp))
+            re_arr.append(int(t))
 
     re_arr.sort()
 

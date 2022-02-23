@@ -8,6 +8,8 @@ Author  : 김학진 (mildsalmon)
 Email   : mildsalmon@gamil.com
 """
 
+import re
+
 
 def solution(text):
     if len(text) % 4 != 0:
@@ -16,7 +18,7 @@ def solution(text):
     cnt = len(text) // 4
 
     for i in range(cnt, 0, -1):
-        text = text.replace(f'{"w"*i}{"o"*i}{"l"*i}{"f"*i}', '')
+        text = re.sub(rf'w{{{i}}}o{{{i}}}l{{{i}}}f{{{i}}}', '', text)
 
     if len(text) != 0:
         return 0

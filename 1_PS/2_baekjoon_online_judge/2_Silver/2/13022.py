@@ -9,35 +9,71 @@ Email   : mildsalmon@gamil.com
 """
 
 
-from collections import defaultdict
+def check(seq, dic):
+    if ''.join(seq) == 'wolf' and dic['w'] == dic['o'] == dic['l'] == dic['f']:
+        seq.clear()
 
-def check_word(s):
-    cnt = 0
-    str_by_cnt = defaultdict(int)
-    flag = False
+        for key, value in dic.items():
+           dic[key] = 0
+    else:
+        return False
+    return True
 
-    for i in range(len(s)):
-        if s[i] != 'f' and flag:
-            check = sum(str_by_cnt.values())
 
-            if check % 4 != 0:
-                return 0
-            flag = False
+def solution(word):
+    if len(word) < 4:
+        return False
 
-        str_by_cnt[s[i]] += 1
+    # wolf 순서 체크를 위한 seq
+    former = word[0]
+    seq = [former]
 
-        if s[i] == 'f':
-            flag = True
+    # wolf 개수 체크를 위한 dic
+    dic = dict(w=0, o=0, l=0, f=0)
+    dic[former] = 1
+    flag = True
 
-    if flag:
-        check = sum(str_by_cnt.values())
+    for i in range(1, len(word)):
+        if word[i] != former:
+            if former == 'f':
+                flag = check(seq, dic)
+            seq.append(word[i])
+            former = word[i]
 
-        if check % 4 != 0:
+        dic[word[i]] += 1
+
+        if i == len(word) - 1:
+            flag = check(seq, dic)
+
+        if not flag:
             return 0
 
     return 1
 
 
 if __name__ == "__main__":
-    s = input()
-    print(check_word(s))
+    print(solution(input()))
+
+    # print(solution('wolwolff'))
+    # print(solution('wolf'))
+    # print(solution('wwolfolf'))
+    # print(solution('wwwoolllfff'))
+    # print(solution('wwolfolf'))
+    # print(solution('wfol'))
+    # print(solution('wolfwwoollffwolf'))
+    # print(solution('wolf'))
+    # print(solution('wwoollff'))
+    # print(solution('wwwooolllfff'))
+    # '''
+    # 0
+    # 1
+    # 0
+    # 0
+    # 0
+    # 0
+    # 0
+    # 1
+    # 1
+    # 1
+    # 1
+    # '''

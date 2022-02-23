@@ -8,42 +8,20 @@ Author  : 김학진 (mildsalmon)
 Email   : mildsalmon@gamil.com
 """
 
-import re
 
 def solution(text):
+    if len(text) % 4 != 0:
+        return 0
 
-    pattern = "(wolf"
-    for i in range(2, 13):
-        pattern += "|w{}{}{}o{}{}{}l{}{}{}f{}{}{}"\
-                .format('{', i, '}','{', i, '}','{', i, '}','{', i, '}',)
-    pattern += ")"
+    cnt = len(text) // 4
 
-    extra = re.sub(pattern, "", text)
-    if len(extra) > 0:
-        print(0)
-    else:
-        print(1)
+    for i in range(cnt, 0, -1):
+        text = text.replace(f'{"w"*i}{"o"*i}{"l"*i}{"f"*i}', '')
 
-solution('wolwolff')
-solution('wolf')
-solution('wwolfolf')
-solution('wwwoolllfff')
-solution('wwolfolf')
-solution('wfol')
-solution('wolfwwoollffwolf')
-solution('wolf')
-solution('wwoollff')
-solution('wwwooolllfff')
-    # '''
-    # 0
-    # 1
-    # 0
-    # 0
-    # 0
-    # 0
-    # 0
-    # 1
-    # 1
-    # 1
-    # 1
-    # '''
+    if len(text) != 0:
+        return 0
+    return 1
+
+
+if __name__ == "__main__":
+    print(solution(input()))

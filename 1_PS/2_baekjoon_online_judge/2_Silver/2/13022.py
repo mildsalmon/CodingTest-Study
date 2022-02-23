@@ -22,7 +22,7 @@ def check(seq, dic):
 
 def solution(word):
     if len(word) < 4:
-        return False
+        return 0
 
     # wolf 순서 체크를 위한 seq
     former = word[0]

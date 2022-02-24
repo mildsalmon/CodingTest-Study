@@ -13,8 +13,10 @@ import re
 def solution(fx):
     answer = ''
 
-    if fx[0] == 'x':
-        fx = '1' + fx
+    # if fx[0] == 'x':
+    #     fx = '1' + fx
+    # elif fx[0] == '-':
+    #     fx = '-1' + fx
 
     fx = re.sub(r'(\d+)', r'\1x', fx)
     num = fx.split('x')
@@ -52,13 +54,10 @@ def solution(fx):
 
         answer += 'x'
 
+    answer += '+W'
     # print(answer)
     # print(num)
     print(answer)
-
-if __name__ == "__main__":
-    fx = input()
-    solution(fx)
 
 if __name__ == "__main__":
     # fx = input()

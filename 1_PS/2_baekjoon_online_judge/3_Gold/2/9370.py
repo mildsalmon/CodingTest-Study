@@ -13,12 +13,12 @@ import heapq
 input = sys.stdin.readline
 
 
-def dijkstra(start: int, distance: list, value: int) -> None:
+def dijkstra(start: int, distance: list) -> None:
     global graph
 
     q = []
-    heapq.heappush(q, (value, start))
-    distance[start] = value
+    heapq.heappush(q, (0, start))
+    distance[start] = 0
 
     while q:
         cost, node = heapq.heappop(q)
@@ -47,21 +47,21 @@ if __name__ == "__main__":
             graph[a].append((d, b))
             graph[b].append((d, a))
 
-        dijkstra(s, distance, 0)
+        dijkstra(s, distance)
 
         g_distance = [1e9 for _ in range(n+1)]
         h_distance = [1e9 for _ in range(n+1)]
 
-        dijkstra(g, g_distance, distance[g])
-        dijkstra(h, h_distance, distance[h])
+        dijkstra(g, g_distance)
+        dijkstra(h, h_distance)
 
-        # destination_candidate = []
+        destination_candidate = []
 
         for _ in range(t):
             x = int(input())
-            # destination_candidate.append(x)
-            # print(distance)
-            # print(g_distance)
-            # print(h_distance)
-            if distance[x] == g_distance[x] == h_distance[x]:
-                print(x, end=' ')
+
+            if (distance[x] == distance[g] + g_distance[h] + h_distance[x])\
+                    or (distance[x] == distance[h] + h_distance[g] + g_distance[x]):
+                destination_candidate.append(x)
+        destination_candidate.sort()
+        print(*destination_candidate, sep=' ')

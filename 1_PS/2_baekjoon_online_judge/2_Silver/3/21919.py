@@ -36,7 +36,7 @@ def multiply(array):
 
 if __name__ == '__main__':
     n = int(input())
-    array = list(map(int, input().split()))
+    array = set(map(int, input().split()))
 
     primes = check_prime(array)
 

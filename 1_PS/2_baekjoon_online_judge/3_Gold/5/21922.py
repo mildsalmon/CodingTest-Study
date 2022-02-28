@@ -12,30 +12,31 @@ import sys
 input = sys.stdin.readline
 
 
-def move(x, y, dn, positions):
-    global airs, graph, n, m, ds
+def move(x, y, positions):
+    global graph, n, m
 
-    if 0 <= x < n and 0 <= y < m:
-        positions[x][y] = True
+    ds = ((0, 1), (1, 0), (0, -1), (-1, 0))
 
-        if graph[x][y] == 0:
-            dx = x + ds[dn][0]
-            dy = y + ds[dn][1]
+    for dn in range(4):
+        dx = x + ds[dn][0]
+        dy = y + ds[dn][1]
 
-            move(dx, dy, dn, positions)
-        elif graph[x][y] == 9:
-            return
-        else:
-            new_dn = change_d(dn, graph[x][y])
+        while 0 <= dx < n and 0 <= dy < m:
+            positions[dx][dy] = True
 
-            if new_dn == 99:
-                return
+            if graph[dx][dy] == 0:
+                dx = dx + ds[dn][0]
+                dy = dy + ds[dn][1]
+            elif graph[dx][dy] == 9:
+                break
             else:
-                dx = x + ds[new_dn][0]
-                dy = y + ds[new_dn][1]
+                dn = change_d(dn, graph[dx][dy])
 
-                move(dx, dy, new_dn, positions)
-
+                if dn == 99:
+                    break
+                else:
+                    dx = dx + ds[dn][0]
+                    dy = dy + ds[dn][1]
 
 
 def change_d(n, item):
@@ -63,7 +64,6 @@ if __name__ == "__main__":
     graph = []
     positions = [[False]*m for _ in range(n)]
     airs = []
-    ds = ((0, 1), (1, 0), (0, -1), (-1, 0))
 
     for i in range(n):
         temp = list(map(int, input().split()))
@@ -75,11 +75,7 @@ if __name__ == "__main__":
         graph.append(temp)
 
     for x, y in airs:
-        for dn in range(4):
-            dx = x + ds[dn][0]
-            dy = y + ds[dn][1]
-
-            move(dx, dy, dn, positions)
+        move(x, y, positions)
 
 
     cnt = count(positions)

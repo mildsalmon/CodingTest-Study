@@ -1,113 +1,83 @@
 """
 Date    : 2021.12.23
-Update  : 2021.12.23
+Update  : 2022.02.28
 Source  : 21922.py
 Purpose : 구현 문제
 url     : https://www.acmicpc.net/problem/21922
 Author  : 김학진 (mildsalmon)
 Email   : mildsalmon@gamil.com
 """
+import sys
 
-def wind_move(graph, visited, x, y):
-    """
-    바람이 지나가는 자리를 구함.
-    :param graph:
-    :param visited: 방문한 위치 (mutable 객체라 따로 return하지 않음)
-    :param x: 에어컨 x좌표
-    :param y: 에어컨 y좌표
-    :return:
-    """
-    global n, m
+input = sys.stdin.readline
+
+
+def move(x, y, positions):
+    global graph, n, m
 
     ds = ((0, 1), (1, 0), (0, -1), (-1, 0))
-    # 이 부분은 블로그에 그림으로 설명할 예정
-    item = {1:(9, 1, 9, 3),
-            2:(0, 9, 2, 9),
-            3:(3, 2, 1, 0),
-            4:(1, 0, 3, 2)}
 
-    for i in range(4):
-        d = ds[i]
+    for dn in range(4):
+        dx = x + ds[dn][0]
+        dy = y + ds[dn][1]
 
-        dx = x + d[0]
-        dy = y + d[1]
+        while 0 <= dx < n and 0 <= dy < m:
+            positions[dx][dy] = True
 
-        while True:
-            # 연구실을 벗어나는 경우
-            if 0 <= dx < n and 0 <= dy < m:
-                # 현재 위치가 에어컨이 아닌 경우
-                if graph[dx][dy] != 9:
-                    visited[dx][dy] = True
-                    # 현재 위치에 물건이 있는 경우
-                    if graph[dx][dy] in (1, 2, 3, 4):
-                        i = item[graph[dx][dy]][i]
-                        # 물건1, 물건2로 인해 더 이상 이동하지 못하는 경우
-                        if i == 9:
-                            break
-                        else:
-                            d = ds[i]
-
-                    dx += d[0]
-                    dy += d[1]
-                else:
-                    break
-            else:
+            if graph[dx][dy] == 0:
+                dx = dx + ds[dn][0]
+                dy = dy + ds[dn][1]
+            elif graph[dx][dy] == 9:
                 break
-    return
+            else:
+                dn = change_d(dn, graph[dx][dy])
 
-def check_place(graph, air_conditioners) -> int:
-    """
-    에어컨별로 바람의 경로를 구함.
-    :param graph:
-    :param air_conditioners:
-    :return: 바람이 지나가는 자리의 수
-    """
-    global n, m
+                if dn == 99:
+                    break
+                else:
+                    dx = dx + ds[dn][0]
+                    dy = dy + ds[dn][1]
 
-    visited = [[False] * m for _ in range(n)]
 
-    for x, y in air_conditioners:
-        visited[x][y] = True
+def change_d(n, item):
+    items = {1: [99, 1, 99, 3],
+             2: [0, 99, 2, 99],
+             3: [3, 2, 1, 0],
+             4: [1, 0, 3, 2]}
 
-        wind_move(graph, visited, x, y)
+    return items[item][n]
 
-    return count_visit(visited)
 
-def count_visit(visited) -> int:
-    """
-    바람이 지나가는 자리의 갯수를 구함
-    :param visited: 바람이 지나가면 true
-    :return: 바람이 지나가는 자리의 수
-    """
-    global n, m
+def count(positions):
+    global n
 
-    count = 0
+    cnt = 0
 
     for i in range(n):
-        for j in range(m):
-            if visited[i][j]:
-                count += 1
+        cnt += positions[i].count(True)
 
-    return count
+    return cnt
+
 
 if __name__ == "__main__":
     n, m = list(map(int, input().split()))
-
     graph = []
-    air_conditioners = []
+    positions = [[False]*m for _ in range(n)]
+    airs = []
 
     for i in range(n):
         temp = list(map(int, input().split()))
 
-        graph.append(temp)
-
         for j in range(m):
             if temp[j] == 9:
-                air_conditioners.append((i, j))
+                airs.append((i, j))
+                positions[i][j] = True
+        graph.append(temp)
+
+    for x, y in airs:
+        move(x, y, positions)
 
 
-    # print(*graph, sep='\n')
-    # print(air_conditioner)
+    cnt = count(positions)
 
-    print(check_place(graph, air_conditioners))
-
+    print(cnt)

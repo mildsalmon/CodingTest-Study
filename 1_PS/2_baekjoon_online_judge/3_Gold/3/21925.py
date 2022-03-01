@@ -8,47 +8,13 @@ Author  : 김학진 (mildsalmon)
 Email   : mildsalmon@gamil.com
 """
 
-'''
-Test Case
-
-############################
-Input
-10
-1 1 5 5 0 7 0 5 5 5
-
-Output
--1
-
-Answer
--1
-############################
-Input
-8
-1 2 3 3 3 3 2 1
-
-Output
--1
-
-Answer
-1
-############################
-Input
-6
-1 2 2 1 1 1
-
-Output
-1
-
-Answer
-2
-'''
-
 if __name__ == "__main__":
     n = int(input())
     array = list(map(int, input().split()))
 
     dp = []
     count = 0
+    flag = False
 
     for num in array:
         dp.append(num)
@@ -57,11 +23,11 @@ if __name__ == "__main__":
             if dp == dp[::-1]:
                 dp = []
                 count += 1
+                flag = False
             else:
-                count = -1
+                flag = True
 
-    if count == 0:
+    if flag:
         print(-1)
     else:
         print(count)
-

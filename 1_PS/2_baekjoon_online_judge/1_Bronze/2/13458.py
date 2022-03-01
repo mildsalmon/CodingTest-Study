@@ -18,8 +18,10 @@ if __name__ == "__main__":
     for i in range(n):
         A[i] -= B
 
-        while A[i] > 0:
-            A[i] -= C
-            cnt += 1
+        if A[i] > 0:
+            if A[i] % C:
+                cnt += A[i] // C + 1
+            else:
+                cnt += A[i] // C
 
     print(cnt)

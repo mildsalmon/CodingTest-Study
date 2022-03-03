@@ -8,12 +8,12 @@ Author  : 김학진 (mildsalmon)
 Email   : mildsalmon@gamil.com
 */
 
-SELECT N,
-    CASE WHEN CONNECT_BY_ISLEAF = 1 THEN 'Leaf'
-        WHEN LEVEL = 1 THEN 'Root'
-        ELSE 'Inner'
-    END
+SELECT N
+     , CASE
+        WHEN
+       END
 FROM BST
 START WITH P IS NULL
 CONNECT BY PRIOR N = P
-ORDER BY N ASC;
+ORDER BY N
+;

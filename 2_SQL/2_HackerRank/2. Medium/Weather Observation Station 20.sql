@@ -26,11 +26,12 @@ Email   : mildsalmon@gamil.com
 
  */
 
-SELECT ROUND(AVG(lat_n), 4)
-FROM (SELECT lat_n,
-        ROW_NUMBER() OVER(ORDER BY lat_n) AS RN,
-        COUNT(1) OVER() + 1 AS CNT
-      FROM station
-     )
-WHERE RN IN (CEIL(CNT/2), FLOOR(CNT/2))
+SELECT ROUND(AVG(LAT_N), 4)
+FROM (
+    SELECT LAT_N
+         , ROW_NUMBER() OVER(ORDER BY LAT_N ASC) AS rank
+         , COUNT(1) OVER() AS cnt
+    FROM station
+)
+WHERE rank IN ((cnt + 1)/2, (cnt+1)/2+MOD((cnt+1),2))
 ;

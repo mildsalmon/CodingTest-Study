@@ -10,7 +10,9 @@ Email   : mildsalmon@gamil.com
 
 SELECT N
      , CASE
-        WHEN
+        WHEN CONNECT_BY_ISLEAF = 1 THEN 'Leaf'
+        WHEN LEVEL = 1 THEN 'Root'
+        ELSE 'Inner'
        END
 FROM BST
 START WITH P IS NULL

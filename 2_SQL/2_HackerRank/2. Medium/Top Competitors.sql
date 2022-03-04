@@ -1,6 +1,6 @@
 /*
 Date    : 2022.01.25
-Update  : 2022.01.25
+Update  : 2022.03.04
 Source  : Top Competitors.sql
 Purpose : JOIN / 서브쿼리
 url     : https://www.hackerrank.com/challenges/full-score/problem?isFullScreen=true
@@ -8,24 +8,17 @@ Author  : 김학진 (mildsalmon)
 Email   : mildsalmon@gamil.com
 */
 
-SELECT H.hacker_id,
-       H.name
+SELECT D.hacker_id
+     , E.name
 FROM (
-    SELECT DISTINCT(S.hacker_id) AS hacker_id,
-           COUNT(*) OVER (PARTITION BY S.hacker_id) AS id_count
-    FROM Submissions S
-        LEFT OUTER JOIN (
-            SELECT C.challenge_id AS C_id,
-                   D.score AS max_score
-            FROM Challenges C
-                LEFT OUTER JOIN Difficulty D
-                    ON (D.difficulty_level = C.difficulty_level)
-        ) NC
-            ON (S.challenge_id = NC.C_id)
-    WHERE S.score = NC.max_score
-) NH
-    LEFT OUTER JOIN Hackers H
-        ON (NH.hacker_id = H.hacker_id)
-WHERE NH.id_count >= 2
-ORDER BY id_count DESC, hacker_id ASC
+    SELECT C.hacker_id
+         , COUNT(DISTINCT C.challenge_id) AS cnt
+    FROM challenges A
+    LEFT OUTER JOIN difficulty B ON (A.difficulty_level = B.difficulty_level)
+    LEFT OUTER JOIN submissions C ON (A.challenge_id = C.challenge_id)
+    WHERE C.score / B.score = 1
+    GROUP BY C.hacker_id
+) D LEFT OUTER JOIN hackers E ON (D.hacker_id = E.hacker_id)
+WHERE D.cnt > 1
+ORDER BY D.cnt DESC, D.hacker_id ASC
 ;

@@ -40,7 +40,7 @@
 
     - [Beajoon - 구현 - 아기 상어 (Github)](https://github.com/mildsalmon/CodingTest-Study/commits/master/1.%20PS/1.%20%EC%9D%B4%EA%B2%83%EC%9D%B4%20%EC%BD%94%EB%94%A9%20%ED%85%8C%EC%8A%A4%ED%8A%B8%EB%8B%A4%20with%20%ED%8C%8C%EC%9D%B4%EC%8D%AC/Ch19/Q46_%EC%95%84%EA%B8%B0%20%EC%83%81%EC%96%B4.py)
 
-#### a. 청소년 상어
+#### b. 청소년 상어
 
 > 클래스로 구현하여, 외부에서는 geeter와 setter로만 객체를 제어할 수 있게 하였다. 또한, 힌트와 메소드별 역할을 적은 주석을 추가하여 가독성을 높였다.
 
@@ -51,6 +51,18 @@
 - GitHub Code
 
     - [Beajoon - 구현 - 청소년 상어 (Github)](https://github.com/mildsalmon/CodingTest-Study/commits/master/1.%20PS/1.%20%EC%9D%B4%EA%B2%83%EC%9D%B4%20%EC%BD%94%EB%94%A9%20%ED%85%8C%EC%8A%A4%ED%8A%B8%EB%8B%A4%20with%20%ED%8C%8C%EC%9D%B4%EC%8D%AC/Ch19/Q47_%EC%B2%AD%EC%86%8C%EB%85%84%20%EC%83%81%EC%96%B4.py)
+
+#### c. 주사위 굴리기
+
+> 주사위를 클래스 객체로 구현하였다. 주사위와 지도의 역할을 분리하여 주사위에서는 주사위 굴리기, top 위치에 적힌 번호 반환, bottom 번호 교체 등만 처리하였다.
+
+- 블로그 포스팅
+
+    - [14499번 - 주사위 굴리기 — mildsalmon (blex.me)](https://blex.me/@mildsalmon/14499%EB%B2%88-%EC%A3%BC%EC%82%AC%EC%9C%84-%EA%B5%B4%EB%A6%AC%EA%B8%B0)
+
+- GitHub Code
+
+    - [Beajoon - 구현 - 주사위 굴리기 (Github)](https://github.com/mildsalmon/CodingTest-Study/blob/8474c57418265e1bda3a7234658250b3b4eb53c4/1_PS/2_baekjoon_online_judge/3_Gold/4/14499.py)
 
 ### C. 자료구조
 

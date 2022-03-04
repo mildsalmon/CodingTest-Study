@@ -32,7 +32,7 @@ LEFT JOIN (
     FROM submission_stats
     GROUP BY challenge_id
 ) E ON (C.challenge_id = E.challenge_id)
-WHERE D.t_v + D.t_u_v + E.t_s + E.t_a_s > 0
 GROUP BY A.contest_id, A.hacker_id, A.name
+HAVING SUM(D.t_v) + SUM(D.t_u_v) + SUM(E.t_s) + SUM(E.t_a_s) > 0
 ORDER BY A.contest_id ASC
 ;

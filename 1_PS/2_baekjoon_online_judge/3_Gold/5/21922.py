@@ -1,6 +1,6 @@
 """
 Date    : 2021.12.23
-Update  : 2022.02.28
+Update  : 2022.03.05
 Source  : 21922.py
 Purpose : 구현 문제
 url     : https://www.acmicpc.net/problem/21922
@@ -12,57 +12,53 @@ import sys
 input = sys.stdin.readline
 
 
-def move(x, y, positions):
-    global graph, n, m
+def wind_move(x, y, visited):
+    global airs, n, m, graph
 
     ds = ((0, 1), (1, 0), (0, -1), (-1, 0))
 
-    for dn in range(4):
-        dx = x + ds[dn][0]
-        dy = y + ds[dn][1]
+    visited[x][y] = True
+
+    for d in range(4):
+        dx = x + ds[d][0]
+        dy = y + ds[d][1]
 
         while 0 <= dx < n and 0 <= dy < m:
-            positions[dx][dy] = True
+            visited[dx][dy] = True
 
             if graph[dx][dy] == 0:
-                dx = dx + ds[dn][0]
-                dy = dy + ds[dn][1]
+                dx = dx + ds[d][0]
+                dy = dy + ds[d][1]
             elif graph[dx][dy] == 9:
                 break
             else:
-                dn = change_d(dn, graph[dx][dy])
-
-                if dn == 99:
-                    break
-                else:
-                    dx = dx + ds[dn][0]
-                    dy = dy + ds[dn][1]
+                d = change_wind(d, graph[dx][dy])
+                dx = dx + ds[d][0]
+                dy = dy + ds[d][1]
 
 
-def change_d(n, item):
-    items = {1: [99, 1, 99, 3],
-             2: [0, 99, 2, 99],
+
+def change_wind(d, item):
+    items = {1: [2, 1, 0, 3],
+             2: [0, 3, 2, 1],
              3: [3, 2, 1, 0],
              4: [1, 0, 3, 2]}
 
-    return items[item][n]
+    return items[item][d]
 
 
-def count(positions):
-    global n
+def count_place(visited):
+    count = 0
 
-    cnt = 0
+    for i in range(len(visited)):
+        count += visited[i].count(True)
 
-    for i in range(n):
-        cnt += positions[i].count(True)
-
-    return cnt
+    return count
 
 
 if __name__ == "__main__":
     n, m = list(map(int, input().split()))
     graph = []
-    positions = [[False]*m for _ in range(n)]
     airs = []
 
     for i in range(n):
@@ -70,14 +66,12 @@ if __name__ == "__main__":
 
         for j in range(m):
             if temp[j] == 9:
-                airs.append((i, j))
-                positions[i][j] = True
+                airs.append((i,j))
         graph.append(temp)
 
+    visited = [[False] * m for _ in range(n)]
+
     for x, y in airs:
-        move(x, y, positions)
+        wind_move(x, y, visited)
 
-
-    cnt = count(positions)
-
-    print(cnt)
+    print(count_place(visited))

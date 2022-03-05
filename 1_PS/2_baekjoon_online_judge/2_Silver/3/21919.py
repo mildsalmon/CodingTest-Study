@@ -1,21 +1,12 @@
 """
 Date    : 2022.2.28
-Update  : 2022.2.28
+Update  : 2022.03.05
 Source  : 21919.py
-Purpose :
+Purpose : 수학
 Author  : 김학진 (mildsalmon)
 Email   : mildsalmon@gamil.com
 """
 import math
-
-def check_prime(array):
-    primes = []
-
-    for num in array:
-        if is_prime(num):
-            primes.append(num)
-
-    return primes
 
 
 def is_prime(x):
@@ -25,7 +16,17 @@ def is_prime(x):
     return True
 
 
-def multiply(array):
+def prime(array):
+    primes = []
+
+    for num in array:
+        if is_prime(num):
+            primes.append(num)
+
+    return primes
+
+
+def LCM(array):
     result = array[0]
 
     for num in array[1:]:
@@ -38,10 +39,9 @@ if __name__ == '__main__':
     n = int(input())
     array = set(map(int, input().split()))
 
-    primes = check_prime(array)
+    primes = prime(array)
 
-    if len(primes):
-        answer = multiply(primes)
-        print(answer)
+    if primes:
+        print(LCM(primes))
     else:
         print(-1)

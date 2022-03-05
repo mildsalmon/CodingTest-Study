@@ -1,6 +1,6 @@
 """
 Date    : 2022.03.02
-Update  : 2022.03.02
+Update  : 2022.03.05
 Source  : 21925.py
 Purpose : dp / slice
 url     : https://www.acmicpc.net/problem/21925
@@ -11,23 +11,18 @@ Email   : mildsalmon@gamil.com
 if __name__ == "__main__":
     n = int(input())
     array = list(map(int, input().split()))
+    temp = []
+    cnt = 0
 
-    dp = []
-    count = 0
-    flag = False
+    for i in array:
+        temp.append(i)
 
-    for num in array:
-        dp.append(num)
+        if len(temp) % 2 == 0:
+            if temp == temp[::-1]:
+                cnt += 1
+                temp = []
 
-        if len(dp) % 2 == 0:
-            if dp == dp[::-1]:
-                dp = []
-                count += 1
-                flag = False
-            else:
-                flag = True
-
-    if flag:
+    if temp:
         print(-1)
     else:
-        print(count)
+        print(cnt)

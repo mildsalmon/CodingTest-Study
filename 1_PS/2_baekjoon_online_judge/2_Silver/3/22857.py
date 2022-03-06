@@ -17,24 +17,25 @@ if __name__ == "__main__":
 
     if s[p2] % 2 == 1:
         odd = 1
-        p2 += 1
     else:
         odd = 0
 
-
     for p1 in range(n):
-        while p2 < n:
+        flag = False
+
+        while p2 < n and odd <= k:
+            p2 += 1
+            if p2 >= n:
+                flag = True
+                break
             if s[p2] % 2 == 1:
                 odd += 1
-            if odd <= k:
-                p2 += 1
-            else:
-                odd -= 1
-                break
 
+        if not flag:
+            odd -= 1
         p2 -= 1
 
-        answer = max(answer, p2-p1+1-odd)
+        answer = max(answer, p2 - p1 + 1 - odd)
 
         if s[p1] % 2 == 1:
             odd -= 1

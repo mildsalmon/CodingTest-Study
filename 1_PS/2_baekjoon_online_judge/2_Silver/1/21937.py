@@ -2,12 +2,15 @@
 Date    : 2022.03.07
 Update  : 2022.03.07
 Source  : 21937.py
-Purpose : 투 포인터
+Purpose : dfs / bfs
 url     : https://www.acmicpc.net/problem/21937
 Author  : 김학진 (mildsalmon)
 Email   : mildsalmon@gamil.com
 """
+import sys
 
+sys.setrecursionlimit(10**6)
+input = sys.stdin.readline
 
 def dfs(node: int):
     global answer, graph, visited

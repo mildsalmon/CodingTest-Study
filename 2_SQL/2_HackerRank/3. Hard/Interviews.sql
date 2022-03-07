@@ -1,6 +1,6 @@
 /*
 Date    : 2022.02.14
-Update  : 2022.03.04
+Update  : 2022.03.07
 Source  : Interviews.sql
 Purpose : JOIN
 url     : https://www.hackerrank.com/challenges/interviews/problem?isFullScreen=true

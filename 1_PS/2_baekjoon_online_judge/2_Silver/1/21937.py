@@ -16,7 +16,7 @@ def dfs(node: int):
 
     for next_node in graph[node]:
         if visited[next_node]:
-            return
+            continue
 
         answer += 1
         dfs(next_node)

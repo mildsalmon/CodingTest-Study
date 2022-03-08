@@ -8,18 +8,47 @@ Author  : 김학진 (mildsalmon)
 Email   : mildsalmon@gamil.com
 """
 import sys
+import heapq
 
 input = sys.stdin.readline
 
 
+def add(P, L):
+    global easy_questions, hard_questions, solved_questions
+
+    solved_questions[P] = False
+    heapq.heappush(easy_questions, [L, P])
+    heapq.heappush(hard_questions, [-L, -P])
+
+
+def recommend(x):
+    global easy_questions, hard_questions, solved_questions
+
+    if x == 1:
+        while solved_questions[-hard_questions[0][1]]:
+            heapq.heappop(hard_questions)
+        return -hard_questions[0][1]
+    else:
+        while solved_questions[easy_questions[0][1]]:
+            heapq.heappop(easy_questions)
+        return easy_questions[0][1]
+
+
+def solved(P):
+    global easy_questions, hard_questions, solved_questions
+
+    solved_questions[P] = True
+
+
 if __name__ == "__main__":
     n = int(input())
-    questions = []
+    easy_questions = []
+    hard_questions = []
+    solved_questions = [False for _ in range(100001)]
 
     for _ in range(n):
         temp = list(map(int, input().split()))
-        questions.append(temp)
-    questions.sort(key=lambda x: -x[1])
+        add(temp[0], temp[1])
 
     m = int(input())
 
@@ -28,17 +57,8 @@ if __name__ == "__main__":
         temp = list(map(int, temp))
 
         if command == 'add':
-            questions.append(temp)
-            questions.sort(key=lambda x: -x[1])
+            add(temp[0], temp[1])
         elif command == 'recommend':
-            rank = temp[0]
-            if rank == 1:
-                rank = 0
-            print(questions[rank][0])
+            print(recommend(temp[0]))
         elif command == 'solved':
-            question = temp[0]
-
-            for i, value in enumerate(questions):
-                if value[0] == question:
-                    questions.pop(i)
-                    break
+            solved(temp[0])

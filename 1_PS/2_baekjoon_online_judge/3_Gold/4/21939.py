@@ -9,6 +9,7 @@ Email   : mildsalmon@gamil.com
 """
 import sys
 import heapq
+from collections import defaultdict
 
 input = sys.stdin.readline
 
@@ -39,12 +40,17 @@ def solved(P):
 
     solved_questions[P] = True
 
+    while easy_questions and solved_questions[easy_questions[0][1]]:
+        heapq.heappop(easy_questions)
+    while hard_questions and solved_questions[-hard_questions[0][1]]:
+        heapq.heappop(hard_questions)
+
 
 if __name__ == "__main__":
     n = int(input())
     easy_questions = []
     hard_questions = []
-    solved_questions = [False for _ in range(100001)]
+    solved_questions = defaultdict(bool)
 
     for _ in range(n):
         temp = list(map(int, input().split()))

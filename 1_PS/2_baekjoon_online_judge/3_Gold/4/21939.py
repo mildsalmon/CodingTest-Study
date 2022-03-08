@@ -9,52 +9,41 @@ Email   : mildsalmon@gamil.com
 """
 import sys
 import heapq
-from collections import defaultdict
 
 input = sys.stdin.readline
 
+class RecommendSystem:
+    def __init__(self):
+        self.easy_questions = []
+        self.hard_questions = []
+        self.solved_questions = dict()
 
-def add(P, L):
-    global easy_questions, hard_questions, solved_questions
+    def add(self, P, L):
+        self.solved_questions[P] = L
+        heapq.heappush(self.easy_questions, [L, P])
+        heapq.heappush(self.hard_questions, [-L, -P])
 
-    solved_questions[P] = False
-    heapq.heappush(easy_questions, [L, P])
-    heapq.heappush(hard_questions, [-L, -P])
+    def recommend(self, x):
+        if x == 1:
+            while self.solved_questions[-self.hard_questions[0][1]] != -self.hard_questions[0][0]:
+                heapq.heappop(self.hard_questions)
+            return -self.hard_questions[0][1]
+        else:
+            while self.solved_questions[self.easy_questions[0][1]] != self.easy_questions[0][0]:
+                heapq.heappop(self.easy_questions)
+            return self.easy_questions[0][1]
 
-
-def recommend(x):
-    global easy_questions, hard_questions, solved_questions
-
-    if x == 1:
-        while solved_questions[-hard_questions[0][1]]:
-            heapq.heappop(hard_questions)
-        return -hard_questions[0][1]
-    else:
-        while solved_questions[easy_questions[0][1]]:
-            heapq.heappop(easy_questions)
-        return easy_questions[0][1]
-
-
-def solved(P):
-    global easy_questions, hard_questions, solved_questions
-
-    solved_questions[P] = True
-
-    while easy_questions and solved_questions[easy_questions[0][1]]:
-        heapq.heappop(easy_questions)
-    while hard_questions and solved_questions[-hard_questions[0][1]]:
-        heapq.heappop(hard_questions)
+    def solved(self, P):
+        self.solved_questions[P] = 0
 
 
 if __name__ == "__main__":
+    recommend_system = RecommendSystem()
     n = int(input())
-    easy_questions = []
-    hard_questions = []
-    solved_questions = defaultdict(bool)
 
     for _ in range(n):
         temp = list(map(int, input().split()))
-        add(temp[0], temp[1])
+        recommend_system.add(temp[0], temp[1])
 
     m = int(input())
 
@@ -63,8 +52,8 @@ if __name__ == "__main__":
         temp = list(map(int, temp))
 
         if command == 'add':
-            add(temp[0], temp[1])
+            recommend_system.add(temp[0], temp[1])
         elif command == 'recommend':
-            print(recommend(temp[0]))
+            print(recommend_system.recommend(temp[0]))
         elif command == 'solved':
-            solved(temp[0])
+            recommend_system.solved(temp[0])

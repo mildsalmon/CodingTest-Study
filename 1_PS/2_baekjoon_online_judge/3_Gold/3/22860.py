@@ -1,9 +1,9 @@
 """
-Date    : 2022.03.09
-Update  : 2022.03.09
-Source  : 21940.py
-Purpose : 플로이드-와샬
-url     : https://www.acmicpc.net/problem/21940
+Date    : 2022.03.10
+Update  : 2022.03.10
+Source  : 22860.py
+Purpose : dict / dfs / 재귀 / 구현 / 문자열 / 파싱
+url     : https://www.acmicpc.net/problem/22860
 Author  : 김학진 (mildsalmon)
 Email   : mildsalmon@gamil.com
 """

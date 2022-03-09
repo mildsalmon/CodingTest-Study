@@ -11,8 +11,10 @@ import sys
 
 sys.setrecursionlimit(10**5)
 
-
 def search_file(roots: dict, child: str, files: list):
+    if child not in roots:
+        return
+
     for name, flag in roots[child]:
         if flag == '1':
             search_file(roots, name, files)
@@ -33,16 +35,13 @@ if __name__ == "__main__":
     n, m = list(map(int, input().split()))
     roots = dict()
 
-    for _ in range(n + m):
+    for _ in range(n+m):
         P, F, C = input().split()
 
         if P in roots:
             roots[P].append([F, C])
         else:
             roots[P] = [[F, C]]
-
-        if C == '1':
-            roots[F] = []
 
     # print(roots)
 

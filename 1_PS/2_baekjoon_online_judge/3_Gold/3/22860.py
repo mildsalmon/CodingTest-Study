@@ -1,6 +1,6 @@
 """
 Date    : 2022.03.10
-Update  : 2022.03.10
+Update  : 2022.03.11
 Source  : 22860.py
 Purpose : dict / dfs / 재귀 / 구현 / 문자열 / 파싱
 url     : https://www.acmicpc.net/problem/22860
@@ -8,56 +8,56 @@ Author  : 김학진 (mildsalmon)
 Email   : mildsalmon@gamil.com
 """
 import sys
+from collections import deque
 
 sys.setrecursionlimit(10**5)
 
+def search_file(query: str) -> list:
+    global directorys
 
-def search_file(roots: dict, child: str, files: list):
-    for name, flag in roots[child]:
-        if flag == '1':
-            search_file(roots, name, files)
-        else:
-            files.append(name)
+    q = deque()
+    q.append(query)
 
-    return
+    files = set()
+    files.add(query)
+    kind_file_cnt = 0
+    file_cnt = 0
 
+    while q:
+        node = q.popleft()
 
-def counting_file(files: list) -> list:
-    file_cnt = len(files)
-    file_type_cnt = len(set(files))
+        if node not in directorys:
+            continue
 
-    return [file_type_cnt, file_cnt]
+        for next_node, flag in directorys[node]:
+            if flag == '1':
+                q.append(next_node)
+                continue
+
+            if next_node in files:
+                file_cnt += 1
+                continue
+
+            files.add(next_node)
+            kind_file_cnt += 1
+            file_cnt += 1
+
+    return [kind_file_cnt, file_cnt]
 
 
 if __name__ == "__main__":
     n, m = list(map(int, input().split()))
-    roots = dict()
+    directorys = dict()
 
     for _ in range(n + m):
-        P, F, C = input().split()
+        p, f, c = input().split()
 
-        if P in roots:
-            roots[P].append([F, C])
-        else:
-            roots[P] = [[F, C]]
+        if p not in directorys:
+            directorys[p] = []
+        directorys[p].append((f, c))
 
-        if C == '1' and F not in roots:
-            roots[F] = []
+    for q in range(int(input())):
+        query = input().split('/')[-1]
 
-    # print(roots)
-
-    q = int(input())
-
-    for _ in range(q):
-        temp = input().split('/')
-        child = temp[-1]
-
-        # print(child)
-        files = []
-
-        search_file(roots, child, files)
-
-        # print(f'file : {files}')
-        file_type_cnt, file_cnt = counting_file(files)
-
-        print(file_type_cnt, file_cnt)
+        answer = search_file(query)
+        print(answer[0], answer[1])

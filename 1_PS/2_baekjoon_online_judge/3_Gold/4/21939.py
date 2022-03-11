@@ -15,30 +15,34 @@ input = sys.stdin.readline
 
 if __name__ == "__main__":
     n = int(input())
-    problems = []
+    hard_problems = []
+    easy_problems = []
+    problems = dict()
 
     for _ in range(n):
         p, l = list(map(int, input().split()))
 
-        problems.append((p, l))
-
-    problems.sort(key=lambda x: [-x[1], -x[0]])
-    dict_problems = dict(problems)
+        heapq.heappush(hard_problems, (-l, -p))
+        heapq.heappush(easy_problems, (l, p))
+        problems[p] = l
 
     for m in range(int(input())):
         command, *temp = input().split()
         temp = list(map(int, temp))
 
         if command == 'add':
-            dict_problems[temp[0]] = temp[1]
+            heapq.heappush(hard_problems, (-temp[1], -temp[0]))
+            heapq.heappush(easy_problems, (temp[1], temp[0]))
+            problems[temp[0]] = temp[1]
         elif command == 'recommend':
             if temp[0] == 1:
-                problems = list(map(lambda x: [-x[1], -x[0]], dict_problems.items()))
-                heapq.heapify(problems)
-                print(-problems[0][1])
+                while problems[-hard_problems[0][1]] != -hard_problems[0][0]:
+                    heapq.heappop(hard_problems)
+                print(-hard_problems[0][1])
             elif temp[0] == -1:
-                problems = list(map(lambda x: [x[1], x[0]], dict_problems.items()))
-                heapq.heapify(problems)
-                print(problems[0][1])
+                while problems[easy_problems[0][1]] != easy_problems[0][0]:
+                    heapq.heappop(easy_problems)
+                print(easy_problems[0][1])
         elif command == 'solved':
-            dict_problems.pop(temp[0])
+            problems[temp[0]] = 0
+

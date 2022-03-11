@@ -1,6 +1,6 @@
 """
 Date    : 2022.03.07
-Update  : 2022.03.07
+Update  : 2022.03.11
 Source  : 21937.py
 Purpose : dfs / bfs
 url     : https://www.acmicpc.net/problem/21937
@@ -8,34 +8,43 @@ Author  : 김학진 (mildsalmon)
 Email   : mildsalmon@gamil.com
 """
 import sys
+from collections import deque
 
-sys.setrecursionlimit(10**6)
+sys.setrecursionlimit(10**5)
 input = sys.stdin.readline
 
-def dfs(node: int):
-    global answer, graph, visited
 
-    visited[node] = True
+def bfs(x, works):
+    global graph
 
-    for next_node in graph[node]:
-        if visited[next_node]:
-            continue
+    if len(graph[x]) == 0:
+        return
 
-        answer += 1
-        dfs(next_node)
+    q = deque()
+    q.append(x)
+
+    while q:
+        node = q.popleft()
+
+        for next_x in graph[node]:
+            if next_x in works:
+                continue
+            works.add(next_x)
+            q.append(next_x)
 
 
 if __name__ == "__main__":
     n, m = list(map(int, input().split()))
     graph = [[] for _ in range(n+1)]
-    visited = [False for _ in range(n+1)]
 
-    for _ in range(m):
+    for i in range(m):
         a, b = list(map(int, input().split()))
+
         graph[b].append(a)
 
     x = int(input())
-    answer = 0
-    dfs(x)
+    works = set()
 
-    print(answer)
+    bfs(x, works)
+
+    print(len(works))

@@ -8,6 +8,7 @@ Author  : 김학진 (mildsalmon)
 Email   : mildsalmon@gamil.com
 """
 import sys
+import heapq
 
 input = sys.stdin.readline
 
@@ -31,10 +32,13 @@ if __name__ == "__main__":
         if command == 'add':
             dict_problems[temp[0]] = temp[1]
         elif command == 'recommend':
-            problems = sorted(list(dict_problems.items()), key=lambda x: [-x[1], -x[0]])
             if temp[0] == 1:
-                print(problems[0][0])
+                problems = list(map(lambda x: [-x[1], -x[0]], dict_problems.items()))
+                heapq.heapify(problems)
+                print(-problems[0][1])
             elif temp[0] == -1:
-                print(problems[-1][0])
+                problems = list(map(lambda x: [x[1], x[0]], dict_problems.items()))
+                heapq.heapify(problems)
+                print(problems[0][1])
         elif command == 'solved':
             dict_problems.pop(temp[0])

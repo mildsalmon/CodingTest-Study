@@ -1,6 +1,6 @@
 """
 Date    : 2022.03.09
-Update  : 2022.03.09
+Update  : 2022.03.11
 Source  : 21940.py
 Purpose : 플로이드-와샬
 url     : https://www.acmicpc.net/problem/21940
@@ -13,22 +13,37 @@ input = sys.stdin.readline
 
 if __name__ == "__main__":
     n, m = list(map(int, input().split()))
-    s = [list(map(lambda x: int(x)-1, input().split()))]
-    d = list(map(lambda x: int(x)-1, input().split()))
+    graph = [[1e9] * (n+1) for _ in range(n+1)]
 
-    temp = [0 for _ in range(n)]
-    save_s = s[-1][:]
-    loop = m+1
+    for i in range(m):
+        a, b, time = list(map(int, input().split()))
+        graph[a][b] = time
 
-    for tc in range(m):
-        for i, x in enumerate(d):
-            temp[x] = s[-1][i]
+    for i in range(1, n+1):
+        graph[i][i] = 0
 
-        s.append(temp[:])
+    for k in range(1, n+1):
+        for i in range(1, n+1):
+            for j in range(1, n+1):
+                graph[i][j] = min(graph[i][j], graph[i][k] + graph[k][j])
 
-        if save_s[:] == s[-1][:]:
-            loop = tc+1
-            break
+    k = int(input())
+    citys = list(map(int, input().split()))
 
-    print(s)
-    print(*map(lambda x: int(x)+1, s[m%loop]))
+    # print(*graph, sep='\n')
+    min_distance = 1e9
+    answer_city = []
+
+    for i in range(1, n+1):
+        max_distance = 0
+        for j in citys:
+            max_distance = max(max_distance, graph[j][i] + graph[i][j])
+
+        if min_distance > max_distance:
+            min_distance = max_distance
+            answer_city = [i]
+        elif min_distance == max_distance:
+            answer_city.append(i)
+
+    answer_city.sort()
+    print(*answer_city, sep=' ')

@@ -1,6 +1,6 @@
 """
 Date    : 2022.03.07
-Update  : 2022.03.07
+Update  : 2022.03.11
 Source  : 21937.py
 Purpose : dfs / bfs
 url     : https://www.acmicpc.net/problem/21937
@@ -9,33 +9,35 @@ Email   : mildsalmon@gamil.com
 """
 import sys
 
-sys.setrecursionlimit(10**6)
+sys.setrecursionlimit(10**5)
 input = sys.stdin.readline
 
-def dfs(node: int):
-    global answer, graph, visited
 
-    visited[node] = True
+def dfs(x, works):
+    global graph
 
-    for next_node in graph[node]:
-        if visited[next_node]:
+    if len(graph[x]) == 0:
+        return
+
+    for next_x in graph[x]:
+        if next_x in works:
             continue
-
-        answer += 1
-        dfs(next_node)
+        works.add(next_x)
+        dfs(next_x, works)
 
 
 if __name__ == "__main__":
     n, m = list(map(int, input().split()))
     graph = [[] for _ in range(n+1)]
-    visited = [False for _ in range(n+1)]
 
-    for _ in range(m):
+    for i in range(m):
         a, b = list(map(int, input().split()))
+
         graph[b].append(a)
 
     x = int(input())
-    answer = 0
-    dfs(x)
+    works = set()
 
-    print(answer)
+    dfs(x, works)
+
+    print(len(works))

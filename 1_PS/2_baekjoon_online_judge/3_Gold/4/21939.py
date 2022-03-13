@@ -1,6 +1,6 @@
 """
 Date    : 2022.03.08
-Update  : 2022.03.11
+Update  : 2022.03.13
 Source  : 21939.py
 Purpose : 우선순위 큐 / dict
 url     : https://www.acmicpc.net/problem/21939
@@ -13,36 +13,50 @@ import heapq
 input = sys.stdin.readline
 
 
+class RecommendSystem:
+    def __init__(self):
+        self.num_by_level = dict()
+        self.hard_problems = []
+        self.easy_problems = []
+
+    def add(self, P, L):
+        self.num_by_level[P] = L
+        heapq.heappush(self.hard_problems, (-L, -P))
+        heapq.heappush(self.easy_problems, (L, P))
+
+    def recommend(self, x):
+        if x == 1:
+            while -self.hard_problems[0][0] != self.num_by_level[-self.hard_problems[0][1]]:
+                heapq.heappop(self.hard_problems)
+            return -self.hard_problems[0][1]
+        elif x == -1:
+            while self.easy_problems[0][0] != self.num_by_level[self.easy_problems[0][1]]:
+                heapq.heappop(self.easy_problems)
+            return self.easy_problems[0][1]
+
+    def solved(self, P):
+        self.num_by_level[P] = 0
+
+
 if __name__ == "__main__":
     n = int(input())
-    hard_problems = []
-    easy_problems = []
-    problems = dict()
+    recommend_system = RecommendSystem()
 
     for _ in range(n):
-        p, l = list(map(int, input().split()))
+        P, L = list(map(int, input().split()))
+        recommend_system.add(P, L)
 
-        heapq.heappush(hard_problems, (-l, -p))
-        heapq.heappush(easy_problems, (l, p))
-        problems[p] = l
+    m = int(input())
 
-    for m in range(int(input())):
-        command, *temp = input().split()
-        temp = list(map(int, temp))
+    for _ in range(m):
+        command, *problem_info = input().split()
+        problem_info = list(map(int, problem_info))
 
         if command == 'add':
-            heapq.heappush(hard_problems, (-temp[1], -temp[0]))
-            heapq.heappush(easy_problems, (temp[1], temp[0]))
-            problems[temp[0]] = temp[1]
+            recommend_system.add(problem_info[0], problem_info[1])
         elif command == 'recommend':
-            if temp[0] == 1:
-                while problems[-hard_problems[0][1]] != -hard_problems[0][0]:
-                    heapq.heappop(hard_problems)
-                print(-hard_problems[0][1])
-            elif temp[0] == -1:
-                while problems[easy_problems[0][1]] != easy_problems[0][0]:
-                    heapq.heappop(easy_problems)
-                print(easy_problems[0][1])
+            P = recommend_system.recommend(problem_info[0])
+            print(P)
         elif command == 'solved':
-            problems[temp[0]] = 0
+            recommend_system.solved(problem_info[0])
 

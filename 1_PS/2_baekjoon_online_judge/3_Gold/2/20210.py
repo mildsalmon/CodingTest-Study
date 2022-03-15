@@ -7,39 +7,62 @@ url     : https://www.acmicpc.net/problem/20210
 Author  : 김학진 (mildsalmon)
 Email   : mildsalmon@gamil.com
 """
+import functools
+import re
+
+
+def alpha_num_grouping(s: str) -> list:
+    com = re.compile(r'[a-zA-Z]|\d+')
+    return re.findall(com, s)
+
+
+def func(a, b) -> int:
+    if a == b:
+        return 0
+    elif a < b:
+        return -1
+    else:
+        return 1
+
+
+def cmp(a, b) -> int:
+    """
+    a와 b를 비교했을 때, a가 더 크면 1 / 같으면 0 / 작으면 -1
+    """
+    for i in range(min(len(a), len(b))):
+        if a[i] == b[i]:
+            continue
+
+        if a[i].isdigit() and b[i].isdigit():
+            # 둘 다 숫자
+            if int(a[i]) == int(b[i]):
+                return func(len(a[i]), len(b[i]))
+            else:
+                return func(int(a[i]), int(b[i]))
+        elif not a[i].isdigit() and not b[i].isdigit():
+            # 둘 다 문자
+            if a[i].lower() == b[i].lower():
+                return func(a[i], b[i])
+            else:
+                return func(a[i].lower(), b[i].lower())
+        else:
+            # 숫자 문자 / 문자 숫자
+            if a[i].isdigit():
+                return -1
+            else:
+                return 1
+
+    return func(len(a), len(b))
+
+
 if __name__ == "__main__":
     n = int(input())
-    strs = [input() for _ in range(n)]
-
-    # strs.sort()
-    # print(strs)
-
-    for i in range(n):
-        temp_str = []
-        num = -1
-        for s in strs[i]:
-            if s.isalpha():
-                if num != 0:
-                    num = -1
-
-                temp = ord(s) + 10000
-
-                if temp >= ord('a') + 10000:
-                    temp = temp - ord('a') + ord('A') + 0.5
-                temp_str.append(temp)
-            else:
-                if num == -1:
-                    num = len(temp_str)
-                    temp_str.append(0)
-
-                if s == '0':
-                    temp_str[num] += 0.001
-                else:
-                    temp_str[num] += (ord(s) - ord('0') + 10)
-        strs[i] = temp_str[:] + [strs[i]]
+    strs = [alpha_num_grouping(input()) for _ in range(n)]
 
     # print(*strs, sep='\n')
+    # print()
 
-    strs.sort(key=lambda x: x[:-1])
+    strs.sort(key=functools.cmp_to_key(cmp))
 
-    print(*map(lambda x: x[-1], strs), sep='\n')
+    for s in strs:
+        print(''.join(s))

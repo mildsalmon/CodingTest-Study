@@ -2,44 +2,51 @@
 Date    : 2022.03.16
 Update  : 2022.03.16
 Source  : 3967.py
-Purpose :
+Purpose : 백트래킹 / 탐색
 url     : https://www.acmicpc.net/problem/3967
 Author  : 김학진 (mildsalmon)
 Email   : mildsalmon@gamil.com
 """
 
 
-def convert(chr):
+def convert(chr: str) -> int:
     return ord(chr) - ord('A')
 
 
-def reverse_convert(num):
+def reverse_convert(num: int) -> str:
     return chr(num + ord('A'))
 
 
 def search_magic_star(depth, visited, stars):
     global graph, answer, cnt
 
-    if cnt == depth:
-        if convert(graph[0][4]) + convert(graph[1][5]) + convert(graph[2][6]) + convert(graph[3][7]) + 4 != 26:
-            return False
-        if convert(graph[1][7]) + convert(graph[2][6]) + convert(graph[3][5]) + convert(graph[4][4]) + 4 != 26:
-            return False
-        if convert(graph[3][1]) + convert(graph[3][3]) + convert(graph[3][5]) + convert(graph[3][7]) + 4 != 26:
-            return False
-        if convert(graph[4][4]) + convert(graph[3][3]) + convert(graph[2][2]) + convert(graph[1][1]) + 4 != 26:
-            return False
-        if convert(graph[3][1]) + convert(graph[2][2]) + convert(graph[1][3]) + convert(graph[0][4]) + 4 != 26:
-            return False
-        if convert(graph[1][1]) + convert(graph[1][3]) + convert(graph[1][5]) + convert(graph[1][7]) + 4 != 26:
-            return False
+    if graph[0][4] != 'x' and graph[1][5] != 'x' and graph[2][6] != 'x' and graph[3][7] != 'x' and \
+            graph[0][4] + graph[1][5] + graph[2][6] + graph[3][7] + 4 != 26:
+        return False
+    if graph[1][7] != 'x' and graph[2][6] != 'x' and graph[3][5] != 'x' and graph[4][4] != 'x' and\
+            graph[1][7] + graph[2][6] + graph[3][5] + graph[4][4] + 4 != 26:
+        return False
+    if graph[3][1] != 'x' and graph[3][3] != 'x' and graph[3][5] != 'x' and graph[3][7] != 'x' and \
+            graph[3][1] + graph[3][3] + graph[3][5] + graph[3][7] + 4 != 26:
+        return False
+    if graph[4][4] != 'x' and graph[3][3] != 'x' and graph[2][2] != 'x' and graph[1][1] != 'x' and \
+            graph[4][4] + graph[3][3] + graph[2][2] + graph[1][1] + 4 != 26:
+        return False
+    if graph[3][1] != 'x' and graph[2][2] != 'x' and graph[1][3] != 'x' and graph[0][4] != 'x' and \
+            graph[3][1] + graph[2][2] + graph[1][3] + graph[0][4] + 4 != 26:
+        return False
+    if graph[1][1] != 'x' and graph[1][3] != 'x' and graph[1][5] != 'x' and graph[1][7] != 'x' and \
+            graph[1][1] + graph[1][3] + graph[1][5] + graph[1][7] + 4 != 26:
+        return False
+
+    if depth == cnt:
         return True
 
+    x, y = stars[depth]
     for i in range(12):
         if visited[i]:
             continue
-        x, y = stars[depth]
-        graph[x][y] = reverse_convert(i)
+        graph[x][y] = i
         visited[i] = True
         flag = search_magic_star(depth+1, visited, stars)
         if flag:
@@ -63,6 +70,7 @@ if __name__ == "__main__":
                 if temp[j] != 'x':
                     index = convert(temp[j])
                     visited[index] = True
+                    graph[i][j] = convert(temp[j])
                 else:
                     stars.append((i, j))
 
@@ -71,4 +79,9 @@ if __name__ == "__main__":
     search_magic_star(0, visited, stars)
 
     for i in range(5):
-        print(''.join(graph[i]))
+        for j in range(len(graph[i])):
+            if str(graph[i][j]).isdigit():
+                print(reverse_convert(graph[i][j]), end='')
+            else:
+                print(graph[i][j], end='')
+        print()

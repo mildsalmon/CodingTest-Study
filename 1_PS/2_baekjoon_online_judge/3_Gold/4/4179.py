@@ -2,60 +2,66 @@
 Date    : 2022.03.17
 Update  : 2022.03.17
 Source  : 4179.py
-Purpose :
+Purpose : bfs
 url     : https://www.acmicpc.net/problem/4179
 Author  : 김학진 (mildsalmon)
 Email   : mildsalmon@gamil.com
 """
 from collections import deque
+import sys
+
+input = sys.stdin.readline
 
 
-def move(q: deque) -> int:
-    global miro
+def move(j_q: deque, j_visited: list, fire_q: deque, fire_visited: list) -> int:
+    global miro, r, c
 
     ds = ((1, 0), (0, 1), (-1, 0), (0, -1))
 
-    while q:
+    while fire_q:
         # 불 -> 지훈 이동
-        x, y, time, fires = q.popleft()
+        x, y = fire_q.popleft()
 
-        temp = set()
+        for d in ds:
+            fdx = x + d[0]
+            fdy = y + d[1]
 
-        for fx, fy in fires:
-            for d in ds:
-                fdx = fx + d[0]
-                fdy = fy + d[1]
+            if 0 <= fdx < r and 0 <= fdy < c:
+                if fire_visited[fdx][fdy] == -1 and miro[fdx][fdy] != '#':
+                    fire_visited[fdx][fdy] = fire_visited[x][y] + 1
+                    fire_q.append((fdx, fdy))
 
-                if 0 <= fdx < r and 0 <= fdy < c:
-                    if miro[fdx][fdy] == '#':
-                        continue
+    # print(*fire_visited, sep='\n')
 
-                    temp.add((fdx, fdy))
-        fires = fires.union(temp)
-
+    while j_q:
         # 지훈
+        x, y = j_q.popleft()
+
         for d in ds:
             dx = x + d[0]
             dy = y + d[1]
 
             if 0 <= dx < r and 0 <= dy < c:
-                if (dx, dy) in fires or miro[dx][dy] == '#':
-                    continue
+                if j_visited[dx][dy] == -1 and miro[dx][dy] != '#':
+                    j_visited[dx][dy] = j_visited[x][y] + 1
 
-                q.append((dx, dy, time+1, fires))
+                    if fire_visited[dx][dy] > j_visited[dx][dy]:
+                        j_q.append((dx, dy))
             else:
-                return time+1
-        # print(*miro, sep='\n')
-        # print(q)
-        # print()
+                return j_visited[x][y] + 1
+
+    # print(*j_visited, sep='\n')
+
     return -1
 
 
 if __name__ == "__main__":
     r, c = list(map(int, input().split()))
     miro = []
-    pos = []
-    fires = set()
+    j_q = deque()
+    fire_q = deque()
+    j_visited = [[-1 for _ in range(c)] for _ in range(r)]
+    fire_visited = [[-1 for _ in range(c)] for _ in range(r)]
 
     for i in range(r):
         temp = list(input())
@@ -63,15 +69,13 @@ if __name__ == "__main__":
 
         for j in range(c):
             if temp[j] == 'J':
-                pos = [i, j, 0]
+                j_q.append((i, j))
+                j_visited[i][j] = 0
             elif temp[j] == 'F':
-                fires.add((i, j))
-    pos.append(fires)
+                fire_q.append((i, j))
+                fire_visited[i][j] = 0
 
-    q = deque()
-    q.append(pos)
-
-    time = move(q)
+    time = move(j_q, j_visited, fire_q, fire_visited)
 
     if time == -1:
         print("IMPOSSIBLE")

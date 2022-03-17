@@ -45,7 +45,7 @@ def move(j_q: deque, j_visited: list, fire_q: deque, fire_visited: list) -> int:
                 if j_visited[dx][dy] == -1 and miro[dx][dy] != '#':
                     j_visited[dx][dy] = j_visited[x][y] + 1
 
-                    if fire_visited[dx][dy] > j_visited[dx][dy]:
+                    if fire_visited[dx][dy] == -1 or fire_visited[dx][dy] > j_visited[dx][dy]:
                         j_q.append((dx, dy))
             else:
                 return j_visited[x][y] + 1

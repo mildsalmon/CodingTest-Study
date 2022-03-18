@@ -10,52 +10,44 @@ Email   : mildsalmon@gamil.com
 from collections import deque
 
 
-def wave(castles, sands):
+def wave(empty_sands, visited, sands):
     global h, w
 
     ds = ((0, 1), (1, 1), (1, 0), (1, -1), (0, -1), (-1, -1), (-1, 0), (-1, 1))
 
-    q = deque()
-    q.append(castles)
     time = 0
 
-    while q:
-        castles = q.popleft()
-        temp_sands = [sands[i][:] for i in range(h)]
-        temp_castles = []
+    while empty_sands:
+        x, y = empty_sands.popleft()
 
-        for cx, cy in castles:
-            cnt = 0
-            for d in ds:
-                dx = cx + d[0]
-                dy = cy + d[1]
+        for d in ds:
+            dx = x + d[0]
+            dy = y + d[1]
 
-                if sands[dx][dy] == '.':
-                    cnt += 1
-            if cnt >= sands[cx][cy]:
-                temp_sands[cx][cy] = '.'
-            else:
-                temp_castles.append((cx, cy))
-
-        if castles[:] == temp_castles[:]:
-            break
-        time += 1
-        sands = [temp_sands[i][:] for i in range(h)]
-        q.append(temp_castles)
-
+            if 0 <= dx < h and 0 <= dy < w:
+                if sands[dx][dy] != 0:
+                    sands[dx][dy] -= 1
+                    if sands[dx][dy] == 0:
+                        visited[dx][dy] = visited[x][y] + 1
+                        time = visited[dx][dy]
+                        empty_sands.append((dx, dy))
     return time
 
 if __name__ == "__main__":
     h, w = list(map(int, input().split()))
     sands = []
-    castles = []
+    empty_sands = deque()
+    visited = [[0 for _ in range(w)] for _ in range(h)]
 
     for i in range(h):
         temp = list(input())
+
         for j in range(w):
-            if temp[j] != '.':
-                castles.append((i, j))
+            if temp[j] == '.':
+                empty_sands.append((i, j))
+                temp[j] = 0
+            else:
                 temp[j] = int(temp[j])
         sands.append(temp)
 
-    print(wave(castles, sands))
+    print(wave(empty_sands, visited, sands))

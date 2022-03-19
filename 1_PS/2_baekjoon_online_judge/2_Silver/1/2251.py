@@ -26,7 +26,7 @@ def water_move(water_amount: set, visited: list):
         x, y = q.popleft()
         z = c - (x + y)
 
-        if x == 0 and z > 0:
+        if x == 0 and z >= 0:
             water_amount.add(z)
 
         # x -> y

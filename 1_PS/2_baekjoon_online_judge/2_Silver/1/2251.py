@@ -1,6 +1,6 @@
 """
 Date    : 2022.03.14
-Update  : 2022.03.14
+Update  : 2022.03.19
 Source  : 2251.py
 Purpose : bfs
 url     : https://www.acmicpc.net/problem/2251
@@ -10,61 +10,52 @@ Email   : mildsalmon@gamil.com
 from collections import deque
 
 
-def bfs(x: int, y: int, waters: list) -> None:
+def water_move(water_amount: set):
     global a, b, c
 
-    def move(x: int, y: int) -> bool:
-        global visited
-
-        if visited[x][y]:
-            return False
-        visited[x][y] = True
-        return True
-
     q = deque()
-    q.append((x, y))
+    q.append((0, 0))
 
     while q:
         x, y = q.popleft()
-        z = c - x - y
+        z = c - (x + y)
 
-        if x == 0:
-            waters.append(z)
+        if z in water_amount:
+            continue
 
-        water = min(x, b - y)
-        if move(x - water, y + water):
-            q.append((x - water, y + water))
+        if x == 0 and z > 0:
+            water_amount.add(z)
 
-        water = min(x, c - z)
-        if move(x - water, y):
-            q.append((x - water, y))
+        # x -> y
+        temp_y = min(x, b)
+        q.append((x - temp_y, temp_y))
 
-        water = min(y, a - x)
-        if move(x + water, y - water):
-            q.append((x + water, y - water))
+        # x -> z
+        temp_z = min(x, c)
+        q.append((x - temp_z, y))
 
-        water = min(y, c - z)
-        if move(x, y - water):
-            q.append((x, y - water))
+        # y -> x
+        temp_x = min(y, a)
+        q.append((temp_x, y - temp_x))
 
-        water = min(z, a - x)
-        if move(x + water, y):
-            q.append((x + water, y))
+        # y -> z
+        temp_z = min(y, c)
+        q.append((x, y - temp_z))
 
-        water = min(z, b - y)
-        if move(x, y + water):
-            q.append((x, y + water))
+        # z -> x
+        temp_x = min(z, a)
+        q.append((temp_x, y))
+
+        # z -> y
+        temp_y = min(z, b)
+        q.append((x, temp_y))
 
 
 if __name__ == "__main__":
     a, b, c = list(map(int, input().split()))
 
-    waters = []
-    visited = [[False for _ in range(b + 1)] for _ in range(a + 1)]
-    visited[0][0] = True
+    water_amount = set()
+    water_move(water_amount)
 
-    bfs(0, 0, waters)
-
-    waters.sort()
-
-    print(*waters, sep=' ')
+    answer = sorted(water_amount)
+    print(*answer)

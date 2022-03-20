@@ -1,6 +1,6 @@
 """
 Date    : 2022.03.16
-Update  : 2022.03.16
+Update  : 2022.03.20
 Source  : 3967.py
 Purpose : 백트래킹 / 탐색
 url     : https://www.acmicpc.net/problem/3967
@@ -8,80 +8,72 @@ Author  : 김학진 (mildsalmon)
 Email   : mildsalmon@gamil.com
 """
 
+def convert_str_to_num(s):
+    return ord(s) - ord('A')
 
-def convert(chr: str) -> int:
-    return ord(chr) - ord('A')
 
-
-def reverse_convert(num: int) -> str:
+def convert_num_to_str(num):
     return chr(num + ord('A'))
 
 
-def search_magic_star(depth, visited, stars):
-    global graph, answer, cnt
+def search_magic_star(search_pos, visited, depth):
+    global stars
 
-    if graph[0][4] != 'x' and graph[1][5] != 'x' and graph[2][6] != 'x' and graph[3][7] != 'x' and \
-            graph[0][4] + graph[1][5] + graph[2][6] + graph[3][7] + 4 != 26:
-        return False
-    if graph[1][7] != 'x' and graph[2][6] != 'x' and graph[3][5] != 'x' and graph[4][4] != 'x' and\
-            graph[1][7] + graph[2][6] + graph[3][5] + graph[4][4] + 4 != 26:
-        return False
-    if graph[3][1] != 'x' and graph[3][3] != 'x' and graph[3][5] != 'x' and graph[3][7] != 'x' and \
-            graph[3][1] + graph[3][3] + graph[3][5] + graph[3][7] + 4 != 26:
-        return False
-    if graph[4][4] != 'x' and graph[3][3] != 'x' and graph[2][2] != 'x' and graph[1][1] != 'x' and \
-            graph[4][4] + graph[3][3] + graph[2][2] + graph[1][1] + 4 != 26:
-        return False
-    if graph[3][1] != 'x' and graph[2][2] != 'x' and graph[1][3] != 'x' and graph[0][4] != 'x' and \
-            graph[3][1] + graph[2][2] + graph[1][3] + graph[0][4] + 4 != 26:
-        return False
-    if graph[1][1] != 'x' and graph[1][3] != 'x' and graph[1][5] != 'x' and graph[1][7] != 'x' and \
-            graph[1][1] + graph[1][3] + graph[1][5] + graph[1][7] + 4 != 26:
-        return False
-
-    if depth == cnt:
+    if depth == len(search_pos):
+        if stars[0][4] + stars[1][3] + stars[2][2] + stars[3][1] + 4 != 26:
+            return False
+        if stars[0][4] + stars[1][5] + stars[2][6] + stars[3][7] + 4 != 26:
+            return False
+        if stars[1][1] + stars[1][3] + stars[1][5] + stars[1][7] + 4 != 26:
+            return False
+        if stars[3][1] + stars[3][3] + stars[3][5] + stars[3][7] + 4 != 26:
+            return False
+        if stars[1][1] + stars[2][2] + stars[3][3] + stars[4][4] + 4 != 26:
+            return False
+        if stars[1][7] + stars[2][6] + stars[3][5] + stars[4][4] + 4 != 26:
+            return False
         return True
 
-    x, y = stars[depth]
+    x, y = search_pos[depth]
     for i in range(12):
         if visited[i]:
             continue
-        graph[x][y] = i
         visited[i] = True
-        flag = search_magic_star(depth+1, visited, stars)
+        stars[x][y] = i
+        flag = search_magic_star(search_pos, visited, depth+1)
         if flag:
             return True
+        stars[x][y] = 'x'
         visited[i] = False
-        graph[x][y] = 'x'
 
 
 if __name__ == "__main__":
-    graph = []
-    # 방문한 지점 A ~ L은 0 ~ 11 index에 매핑
-    visited = [False for _ in range(12)]
     stars = []
-    answer = []
+    search_pos = []
+    visited = [False for _ in range(12)]
 
     for i in range(5):
         temp = list(input())
-        graph.append(temp)
-        for j in range(len(temp)):
-            if temp[j] != '.':
-                if temp[j] != 'x':
-                    index = convert(temp[j])
-                    visited[index] = True
-                    graph[i][j] = convert(temp[j])
-                else:
-                    stars.append((i, j))
+        for j in range(9):
+            if temp[j] == '.':
+                continue
 
-    cnt = len(stars)
+            if temp[j] == 'x':
+                search_pos.append((i, j))
+            else:
+                index = convert_str_to_num(temp[j])
+                visited[index] = True
+                temp[j] = index
+        stars.append(temp)
 
-    search_magic_star(0, visited, stars)
+    search_magic_star(search_pos, visited, 0)
 
     for i in range(5):
-        for j in range(len(graph[i])):
-            if str(graph[i][j]).isdigit():
-                print(reverse_convert(graph[i][j]), end='')
+        for j in range(9):
+            if stars[i][j] == '.':
+                print('.', end='')
             else:
-                print(graph[i][j], end='')
+                print(convert_num_to_str(stars[i][j]), end='')
         print()
+    # print(*stars, sep='\n')
+

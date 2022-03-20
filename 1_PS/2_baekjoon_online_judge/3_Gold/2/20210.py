@@ -1,68 +1,61 @@
 """
 Date    : 2022.03.15
-Update  : 2022.03.15
+Update  : 2022.03.20
 Source  : 20210.py
 Purpose : 정렬 / timsort / re
 url     : https://www.acmicpc.net/problem/20210
 Author  : 김학진 (mildsalmon)
 Email   : mildsalmon@gamil.com
 """
-import functools
 import re
+import functools
 
 
-def alpha_num_grouping(s: str) -> list:
-    com = re.compile(r'[a-zA-Z]|\d+')
+def split_str_num(s: str) -> list:
+    com = re.compile(r'[A-Za-z]|\d+')
     return re.findall(com, s)
 
 
-def func(a, b) -> int:
-    if a == b:
-        return 0
-    elif a < b:
+def decision(x, y) -> int:
+    if x > y:
+        return 1
+    elif x < y:
         return -1
     else:
-        return 1
+        return 0
 
 
 def cmp(a, b) -> int:
     """
-    a와 b를 비교했을 때, a가 더 크면 1 / 같으면 0 / 작으면 -1
+    a가 크면 1, 같으면 0, 작으면 -1
     """
-    for i in range(min(len(a), len(b))):
-        if a[i] == b[i]:
+    for a_element, b_element in zip(a, b):
+        if a_element == b_element:
             continue
 
-        if a[i].isdigit() and b[i].isdigit():
-            # 둘 다 숫자
-            if int(a[i]) == int(b[i]):
-                return func(len(a[i]), len(b[i]))
+        if a_element.isdigit() and b_element.isdigit():
+            if int(a_element) == int(b_element):
+                # 숫자가 같은거니 0의 개수 카운트
+                return decision(len(a_element), len(b_element))
             else:
-                return func(int(a[i]), int(b[i]))
-        elif not a[i].isdigit() and not b[i].isdigit():
-            # 둘 다 문자
-            if a[i].lower() == b[i].lower():
-                return func(a[i], b[i])
+                return decision(int(a_element), int(b_element))
+        elif a_element.isalpha() and b_element.isalpha():
+            if a_element.lower() == b_element.lower():
+                return decision(a_element, b_element)
             else:
-                return func(a[i].lower(), b[i].lower())
+                return decision(a_element.lower(), b_element.lower())
         else:
-            # 숫자 문자 / 문자 숫자
-            if a[i].isdigit():
+            if a_element.isdigit():
                 return -1
-            else:
+            elif b_element.isdigit():
                 return 1
-
-    return func(len(a), len(b))
+    return decision(len(a), len(b))
 
 
 if __name__ == "__main__":
     n = int(input())
-    strs = [alpha_num_grouping(input()) for _ in range(n)]
+    files = [split_str_num(input()) for _ in range(n)]
+    files.sort()
+    files.sort(key=functools.cmp_to_key(cmp))
 
-    # print(*strs, sep='\n')
-    # print()
-
-    strs.sort(key=functools.cmp_to_key(cmp))
-
-    for s in strs:
-        print(''.join(s))
+    print(*list(map(lambda x: ''.join(x), files)), sep='\n')

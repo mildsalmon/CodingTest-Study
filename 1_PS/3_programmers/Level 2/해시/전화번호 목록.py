@@ -9,13 +9,10 @@ Email   : mildsalmon@gamil.com
 
 
 def solution(phone_book):
-    answer = True
-
     phone_book.sort()
 
-    for i, phone in enumerate(phone_book[:-1]):
-        if phone in phone_book[i + 1][:len(phone)]:
-            answer = False
-            break
+    for pre_phone, in_phone in zip(phone_book, phone_book[1:]):
+        if in_phone.startswith(pre_phone):
+            return False
 
-    return answer
+    return True

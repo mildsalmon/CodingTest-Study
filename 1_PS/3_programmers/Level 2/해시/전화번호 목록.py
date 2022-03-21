@@ -7,25 +7,16 @@ Author  : 김학진 (mildsalmon)
 Email   : mildsalmon@gamil.com
 """
 
+
 def solution(phone_book):
-    """
-    sort를 하면 문자열들(['1', '2', '3', '123', '24'])은 ['1', '123', '2', '24', '3'] 으로 정렬된다.
-    그럼 현재 인덱스의 문자열과 다음 인덱스의 문자열을 비교하여 접두어인지 확인할 수 있다.
-    """
+    answer = True
+
     phone_book.sort()
 
-    for i in range(len(phone_book) - 1):
-        phone_len = len(phone_book[i])
-        # 다음 인덱스의 문자열의 접두어가 현재 인덱스와 같은지 알기 위해서는
-        # 다음 인덱스의 문자열에서 현재 인덱스의 길이만큼만 비교하면 알 수 있다.
-        if phone_book[i] == phone_book[i + 1][:phone_len]:
-            return False
+    for i, phone in enumerate(phone_book[:-1]):
+        if phone in phone_book[i + 1]:
+            answer = False
+            break
 
-    return True
+    return answer
 
-# def solution(phoneBook):
-#     phoneBook = sorted(phoneBook)
-#     for p1, p2 in zip(phoneBook, phoneBook[1:]):
-#         if p2.startswith(p1):
-#             return False
-#     return True

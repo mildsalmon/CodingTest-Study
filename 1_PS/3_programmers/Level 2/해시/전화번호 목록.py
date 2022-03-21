@@ -1,6 +1,6 @@
 """
 Date    : 2021.12.16
-Update  : 2021.12.16
+Update  : 2021.03.21
 Source  : 전화번호 목록.py
 Purpose : 문자열 비교를 통해 해결.
 Author  : 김학진 (mildsalmon)
@@ -14,9 +14,8 @@ def solution(phone_book):
     phone_book.sort()
 
     for i, phone in enumerate(phone_book[:-1]):
-        if phone in phone_book[i + 1]:
+        if phone in phone_book[i + 1][:len(phone)]:
             answer = False
             break
 
     return answer
-

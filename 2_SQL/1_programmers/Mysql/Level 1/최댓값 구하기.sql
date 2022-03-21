@@ -8,8 +8,6 @@ Author  : 김학진 (mildsalmon)
 Email   : mildsalmon@gamil.com
 */
 
-SELECT DATETIME
+SELECT MAX(DATETIME)
 FROM ANIMAL_INS
-ORDER BY DATETIME DESC
-LIMIT 1
 ;

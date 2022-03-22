@@ -1,30 +1,44 @@
+"""
+Date    : 2022.01.21
+Update  : 2022.03.22
+Source  : 디스크 컨트롤러.py
+Purpose : heap / sjf
+url     : https://programmers.co.kr/learn/courses/30/lessons/42627
+Author  : 김학진 (mildsalmon)
+Email   : mildsalmon@gamil.com
+"""
+
 import heapq
 
+
 def solution(jobs):
-    jobs.sort(key=lambda x:[-x[0], -x[1]])
-
-    work_count = len(jobs)
-    temp = jobs.pop()[::-1]
-    wait_queue = [temp]
-    acc = temp[1]
+    print()
     answer = 0
+    end = 0
+    len_jobs = len(jobs)
 
-    while wait_queue:
-        time = heapq.heappop(wait_queue)
-        acc += time[0]
-        answer += (acc - time[1])
+    heapq.heapify(jobs)
 
-        while jobs:
-            if jobs[-1][0] <= acc:
-                heapq.heappush(wait_queue, jobs.pop()[::-1])
-            else:
-                if len(wait_queue) == 0:
-                    temp = jobs.pop()[::-1]
-                    heapq.heappush(wait_queue, temp)
-                    acc = temp[1]
-                break
+    while jobs:
+        start, elapsed_time = heapq.heappop(jobs)
+        end = max(end, start) + elapsed_time
+        answer += end - start
+        temp = []
 
-    return answer // work_count
+        for job in jobs[:]:
+            if job[0] <= end:
+                heapq.heappush(temp, heapq.heappop(jobs)[::-1])
+
+        if temp:
+            elapsed_time, start = heapq.heappop(temp)
+            end = max(end, start) + elapsed_time
+            answer += end - start
+
+            for job in temp:
+                heapq.heappush(jobs, job[::-1])
+        print(answer)
+
+    return answer // len_jobs
 
 
 
@@ -44,27 +58,27 @@ print(solution([[24, 10], [18, 39], [34, 20], [37, 5], [47, 22], [20, 47], [15, 
 # https://seoyoung2.github.io/algorithm/2020/06/04/Programmers-diskcontroller.html
 
 # 정확성  테스트
-# 테스트 1 〉	통과 (0.64ms, 10.3MB)
-# 테스트 2 〉	통과 (1.01ms, 10.3MB)
-# 테스트 3 〉	통과 (0.55ms, 10.3MB)
-# 테스트 4 〉	통과 (0.48ms, 10.3MB)
-# 테스트 5 〉	통과 (0.72ms, 10.3MB)
-# 테스트 6 〉	통과 (0.03ms, 10.2MB)
-# 테스트 7 〉	통과 (0.43ms, 10.2MB)
-# 테스트 8 〉	통과 (0.31ms, 10.3MB)
-# 테스트 9 〉	통과 (0.12ms, 10.3MB)
-# 테스트 10 〉	통과 (0.74ms, 10.2MB)
-# 테스트 11 〉	통과 (0.02ms, 10.2MB)
-# 테스트 12 〉	통과 (0.02ms, 10.3MB)
-# 테스트 13 〉	통과 (0.02ms, 10.2MB)
-# 테스트 14 〉	통과 (0.01ms, 10.2MB)
-# 테스트 15 〉	통과 (0.01ms, 10.3MB)
-# 테스트 16 〉	통과 (0.01ms, 10.2MB)
-# 테스트 17 〉	통과 (0.01ms, 10.3MB)
-# 테스트 18 〉	통과 (0.01ms, 10.2MB)
-# 테스트 19 〉	통과 (0.01ms, 10.3MB)
+# 테스트 1 〉	실패 (48.01ms, 10.1MB)
+# 테스트 2 〉	실패 (32.35ms, 10.1MB)
+# 테스트 3 〉	실패 (23.04ms, 10.2MB)
+# 테스트 4 〉	실패 (22.86ms, 9.97MB)
+# 테스트 5 〉	실패 (36.45ms, 10.1MB)
+# 테스트 6 〉	실패 (0.12ms, 10MB)
+# 테스트 7 〉	실패 (20.13ms, 10.2MB)
+# 테스트 8 〉	실패 (12.35ms, 10.3MB)
+# 테스트 9 〉	실패 (3.01ms, 10.2MB)
+# 테스트 10 〉	실패 (43.59ms, 10.3MB)
+# 테스트 11 〉	실패 (0.02ms, 9.97MB)
+# 테스트 12 〉	실패 (0.03ms, 10.2MB)
+# 테스트 13 〉	통과 (0.03ms, 10.2MB)
+# 테스트 14 〉	실패 (0.02ms, 10.1MB)
+# 테스트 15 〉	실패 (0.01ms, 10.1MB)
+# 테스트 16 〉	실패 (0.02ms, 10.2MB)
+# 테스트 17 〉	통과 (0.01ms, 10.1MB)
+# 테스트 18 〉	실패 (0.01ms, 10.1MB)
+# 테스트 19 〉	통과 (0.01ms, 9.95MB)
 # 테스트 20 〉	통과 (0.01ms, 10.2MB)
 #
 # 채점 결과
-# 정확성: 100.0
-# 합계: 100.0 / 100.0
+# 정확성: 20.0
+# 합계: 20.0 / 100.0

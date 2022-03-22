@@ -8,7 +8,7 @@ Author  : 김학진 (mildsalmon)
 Email   : mildsalmon@gamil.com
 */
 
-SELECT CAST(DATE_FORMAT(DATETIME, '%k') AS UNSIGNED) AS DATE
+SELECT HOUR(DATETIME) AS DATE
      , COUNT(1)
 FROM ANIMAL_OUTS
 GROUP BY 1

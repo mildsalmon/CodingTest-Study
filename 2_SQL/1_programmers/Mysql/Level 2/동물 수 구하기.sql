@@ -1,6 +1,6 @@
 /*
-Date    : 2021.03.21
-Update  : 2021.03.21
+Date    : 2022.03.21
+Update  : 2022.03.21
 Source  : 동물 수 구하기.sql
 Purpose : COUNT
 url     : https://programmers.co.kr/learn/courses/30/lessons/59406?language=mysql

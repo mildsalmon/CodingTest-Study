@@ -1,6 +1,6 @@
 /*
-Date    : 2021.03.21
-Update  : 2021.03.21
+Date    : 2022.03.21
+Update  : 2022.03.21
 Source  : 최댓값 구하기.sql
 Purpose : 최대값 구하기
 url     : https://programmers.co.kr/learn/courses/30/lessons/59415?language=mysql

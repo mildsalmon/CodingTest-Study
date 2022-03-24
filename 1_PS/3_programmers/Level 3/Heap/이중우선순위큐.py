@@ -23,18 +23,18 @@ class DoublePriorityQueue:
 
     def delete_num(self, q):
         if self.empty_queue(self.min_value) or self.empty_queue(self.max_value):
+            self.max_value = []
+            self.min_value = []
             return
 
         if q == -1:
+            self.visited[heapq.heappop(self.min_value)] = False
             while not self.empty_queue(self.min_value) and not self.visited[self.min_value[0]]:
                 heapq.heappop(self.min_value)
-            if not self.empty_queue(self.min_value):
-                self.visited[heapq.heappop(self.min_value)] = False
         elif q == 1:
+            self.visited[-heapq.heappop(self.max_value)] = False
             while not self.empty_queue(self.max_value) and not self.visited[-self.max_value[0]]:
                 heapq.heappop(self.max_value)
-            if not self.empty_queue(self.max_value):
-                self.visited[-heapq.heappop(self.max_value)] = False
 
     def empty_queue(self, q):
         if len(q):
@@ -83,3 +83,5 @@ def solution(operations):
 # 채점 결과
 # 정확성: 100.0
 # 합계: 100.0 / 100.0
+
+print(solution(["I 6", "I 2", "I 1", "I 4", "I 5", "I 3", "D 1", "I 7", "D -1", "I 6", "D -1", "D -1"]))

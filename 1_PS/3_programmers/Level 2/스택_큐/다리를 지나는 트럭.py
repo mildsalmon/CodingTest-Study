@@ -8,27 +8,44 @@ Author  : 김학진 (mildsalmon)
 Email   : mildsalmon@gamil.com
 """
 
+
 def solution(bridge_length, weight, truck_weights):
     answer = 0
-    current_weight = [truck_weights.pop(0)]
-    flag = True
+    bridge = [0 for _ in range(bridge_length)]
 
-    while True:
-        while sum(current_weight) + sum(truck_weights[:1]) <= weight:
-            if truck_weights:
-                current_weight.append(truck_weights.pop(0))
-                answer += 1
+    while bridge:
+        bridge.pop(0)
+
+        if truck_weights:
+            if sum(bridge) + truck_weights[0] <= weight:
+                bridge.append(truck_weights.pop(0))
             else:
-                # current_weight
-                break
-        answer += bridge_length
-        current_weight = [current_weight[-1]]
+                bridge.append(0)
 
-        if len(current_weight) == 0 and len(truck_weights) == 0:
-            break
+        answer += 1
 
     return answer
 
 solution(2,10,[7,4,5,6])
 solution(100,100,[10])
 solution(100,100,[10,10,10,10,10,10,10,10,10,10])
+
+# 정확성  테스트
+# 테스트 1 〉	통과 (12.51ms, 10.3MB)
+# 테스트 2 〉	통과 (1640.78ms, 10.1MB)
+# 테스트 3 〉	통과 (0.03ms, 10.2MB)
+# 테스트 4 〉	통과 (370.69ms, 10.3MB)
+# 테스트 5 〉	실패 (시간 초과)
+# 테스트 6 〉	통과 (1660.62ms, 10.4MB)
+# 테스트 7 〉	통과 (5.76ms, 10.4MB)
+# 테스트 8 〉	통과 (0.39ms, 10.3MB)
+# 테스트 9 〉	통과 (5.34ms, 10.2MB)
+# 테스트 10 〉	통과 (0.48ms, 10.2MB)
+# 테스트 11 〉	통과 (0.01ms, 10.3MB)
+# 테스트 12 〉	통과 (0.27ms, 10.1MB)
+# 테스트 13 〉	통과 (2.95ms, 10.1MB)
+# 테스트 14 〉	통과 (0.02ms, 10.3MB)
+#
+# 채점 결과
+# 정확성: 92.9
+# 합계: 92.9 / 100.0

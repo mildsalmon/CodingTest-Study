@@ -1,6 +1,6 @@
 """
 Date    : 2022.01.21
-Update  : 2022.03.22
+Update  : 2022.03.27
 Source  : 디스크 컨트롤러.py
 Purpose : heap / sjf
 url     : https://programmers.co.kr/learn/courses/30/lessons/42627
@@ -12,30 +12,39 @@ import heapq
 
 
 def solution(jobs):
-    jobs.sort()
-    len_jobs = len(jobs)
-
-    wait_queue = []
-    heapq.heappush(wait_queue, jobs.pop(0)[::-1])
-    end = 0  # wait_queue[0][0]
     total_time = 0
+    answer = 0
+    wait_q = []
+    jobs.sort()
+    wait_q.append(jobs[0])
+    visited = [False for _ in range(len(jobs))]
+    visited[0] = True
 
-    while wait_queue:
-        elapsed_time, start = heapq.heappop(wait_queue)
-        end = max(start, end) + elapsed_time
-        total_time += end - start
+    while wait_q:
+        start_time, time = heapq.heappop(wait_q)
+        total_time = max(total_time, start_time) + time
+        answer += total_time - start_time
 
-        for job in jobs[:]:
-            if job[0] <= end:
-                heapq.heappush(wait_queue, jobs.pop(0)[::-1])
-            else:
-                if len(wait_queue) == 0:
-                    heapq.heappush(wait_queue, jobs.pop(0)[::-1])
-                else:
-                    break
+        if visited.count(True) == len(visited):
+            break
 
-    return total_time // len_jobs
+        temp = []
+        temp_i = 1e9
 
+        for i, job in enumerate(jobs[:]):
+            if not visited[i] and job[0] <= total_time:
+                temp.append(job + [i])
+            elif not visited[i]:
+                temp_i = min(i, temp_i)
+
+        if len(temp) == 0:
+            temp.append(jobs[temp_i] + [temp_i])
+
+        temp.sort(key=lambda x: (x[1], x[0]))
+        heapq.heappush(wait_q, temp[0][:2])
+        visited[temp[0][2]] = True
+
+    return answer // len(jobs)
 
 
 print(solution([[0, 3], [1, 9], [2, 6]]))               # 9

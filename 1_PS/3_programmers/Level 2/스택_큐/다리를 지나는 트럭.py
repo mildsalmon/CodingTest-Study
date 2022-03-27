@@ -1,6 +1,6 @@
 """
 Date    : 2022.03.25
-Update  : 2022.03.25
+Update  : 2022.03.27
 Source  : 다리를 지나는 트럭.py
 Purpose : queue / stack
 url     : https://programmers.co.kr/learn/courses/30/lessons/42583
@@ -8,20 +8,21 @@ Author  : 김학진 (mildsalmon)
 Email   : mildsalmon@gamil.com
 """
 
+from collections import deque
+
 
 def solution(bridge_length, weight, truck_weights):
     answer = 0
-    bridge = [0 for _ in range(bridge_length)]
-    now_weight = 0
+    bridge = deque([0 for _ in range(bridge_length)])
+    last_sum = 0
 
     while bridge:
-        now_weight -= bridge.pop(0)
+        last_sum -= bridge.popleft()
 
         if truck_weights:
-            if now_weight + truck_weights[0] <= weight:
-                temp = truck_weights.pop(0)
-                now_weight += temp
-                bridge.append(temp)
+            if last_sum + truck_weights[0] <= weight:
+                last_sum += truck_weights[0]
+                bridge.append(truck_weights.pop(0))
             else:
                 bridge.append(0)
 

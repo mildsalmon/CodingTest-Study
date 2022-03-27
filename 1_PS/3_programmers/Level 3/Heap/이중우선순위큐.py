@@ -1,6 +1,6 @@
 """
 Date    : 2022.03.24
-Update  : 2022.03.24
+Update  : 2022.03.27
 Source  : 이중우선순위큐.py
 Purpose : heapq / class
 url     : https://programmers.co.kr/learn/courses/30/lessons/42628?language=python3
@@ -8,69 +8,44 @@ Author  : 김학진 (mildsalmon)
 Email   : mildsalmon@gamil.com
 """
 import heapq
-
-
-class DoublePriorityQueue:
-    def __init__(self):
-        self.max_value = []
-        self.min_value = []
-        self.visited = dict()
-
-    def add_num(self, num):
-        heapq.heappush(self.min_value, num)
-        heapq.heappush(self.max_value, -num)
-        self.visited[num] = True
-
-    def delete_num(self, q):
-        if self.empty_queue(self.min_value) or self.empty_queue(self.max_value):
-            self.max_value = []
-            self.min_value = []
-            return
-
-        if q == -1:
-            self.visited[heapq.heappop(self.min_value)] = False
-            while not self.empty_queue(self.min_value) and not self.visited[self.min_value[0]]:
-                heapq.heappop(self.min_value)
-        elif q == 1:
-            self.visited[-heapq.heappop(self.max_value)] = False
-            while not self.empty_queue(self.max_value) and not self.visited[-self.max_value[0]]:
-                heapq.heappop(self.max_value)
-
-    def empty_queue(self, q):
-        if len(q):
-            return False
-        return True
-
-    def check_max_min(self):
-        max_q = 0
-        min_q = 0
-
-        while len(self.min_value) and not self.visited[self.min_value[0]]:
-            heapq.heappop(self.min_value)
-        while len(self.max_value) and not self.visited[-self.max_value[0]]:
-            heapq.heappop(self.max_value)
-
-        if len(self.max_value):
-            max_q = -heapq.heappop(self.max_value)
-        if len(self.min_value):
-            min_q = heapq.heappop(self.min_value)
-
-        return [max_q, min_q]
+from collections import defaultdict
 
 
 def solution(operations):
-    q = DoublePriorityQueue()
+    _max = []
+    _min = []
+    visited = defaultdict(int)
 
     for operation in operations:
-        command, value = operation.split()
-        value = int(value)
+        command, num = map(lambda x: x if x.isalpha() else int(x), operation.split())
 
         if command == 'I':
-            q.add_num(value)
+            heapq.heappush(_min, num)
+            heapq.heappush(_max, -num)
+            visited[num] += 1
         elif command == 'D':
-            q.delete_num(value)
+            if num == 1:
+                while len(_max) and visited[-_max[0]] == 0:
+                    heapq.heappop(_max)
+                if len(_max):
+                    temp = heapq.heappop(_max)
+                    visited[-temp] -= 1
+            elif num == -1:
+                while len(_min) and visited[_min[0]] == 0:
+                    heapq.heappop(_min)
+                if len(_min):
+                    temp = heapq.heappop(_min)
+                    visited[temp] -= 1
 
-    return q.check_max_min()
+    if len(_max) and len(_min):
+        while visited[-_max[0]] == 0:
+            heapq.heappop(_max)
+        while visited[_min[0]] == 0:
+            heapq.heappop(_min)
+        return [-_max[0], _min[0]]
+
+    return [0, 0]
+
 
 # 정확성  테스트
 # 테스트 1 〉	통과 (0.03ms, 10.3MB)
@@ -85,3 +60,5 @@ def solution(operations):
 # 합계: 100.0 / 100.0
 
 print(solution(["I 6", "I 2", "I 1", "I 4", "I 5", "I 3", "D 1", "I 7", "D -1", "I 6", "D -1", "D -1"]))
+print(solution(	["I -45", "I 653", "D 1", "I -642", "I 45", "I 97", "D 1", "D -1", "I 333"]))
+print(solution(		["I 16", "I -5643", "D -1", "D 1", "D 1", "I 123", "D -1"]))

@@ -1,6 +1,6 @@
 """
 Date    : 2022.03.28
-Update  : 2022.03.28
+Update  : 2022.04.03
 Source  : 모의고사.py
 Purpose : dfs / 완전 탐색 / 재귀
 url     : https://programmers.co.kr/learn/courses/30/lessons/42840?language=python3

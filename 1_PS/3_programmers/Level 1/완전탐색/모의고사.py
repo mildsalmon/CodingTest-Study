@@ -10,29 +10,29 @@ Email   : mildsalmon@gamil.com
 
 
 def solution(answers):
-    answer = []
+    cnt = [0, 0, 0]
     people = [[1, 2, 3, 4, 5],
               [2, 1, 2, 3, 2, 4, 2, 5],
               [3, 3, 1, 1, 2, 2, 4, 4, 5, 5]]
-    cnt = [0, 0, 0]
 
-    for i, value in enumerate(answers):
-        if people[0][i % len(people[0])] == value:
+    for i, answer in enumerate(answers):
+        if people[0][i % 5] == answer:
             cnt[0] += 1
-        if people[1][i % len(people[1])] == value:
+        if people[1][i % 8] == answer:
             cnt[1] += 1
-        if people[2][i % len(people[2])] == value:
+        if people[2][i % 10] == answer:
             cnt[2] += 1
 
     _max = max(cnt)
+    high_score = []
 
-    for i, value in enumerate(cnt):
-        if _max == value:
-            answer.append(i + 1)
+    for i in range(3):
+        if cnt[i] == _max:
+            high_score.append(i + 1)
 
-    answer.sort()
+    high_score.sort()
 
-    return answer
+    return high_score
 
 # 정확성  테스트
 # 테스트 1 〉	통과 (0.01ms, 10.2MB)

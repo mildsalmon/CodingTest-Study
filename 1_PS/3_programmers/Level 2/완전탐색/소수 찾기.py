@@ -7,9 +7,6 @@ url     : https://programmers.co.kr/learn/courses/30/lessons/42839?language=pyth
 Author  : 김학진 (mildsalmon)
 Email   : mildsalmon@gamil.com
 """
-from itertools import permutations
-
-
 def is_prime(x):
     if x <= 1:
         return False
@@ -20,21 +17,38 @@ def is_prime(x):
     return True
 
 
+def per_num(depth, numbers, visited, number):
+    global n, answer
+
+    if depth == n:
+        print(number)
+        if number:
+            if int(number) in answer:
+                return
+            if is_prime(int(number)):
+                answer.add(int(number))
+        return
+
+    for i, value in enumerate(numbers):
+        if visited[i]:
+            per_num(depth + 1, numbers, visited, number)
+            continue
+        visited[i] = True
+        per_num(depth + 1, numbers, visited, number + value)
+        visited[i] = False
+
+
 def solution(numbers):
-    answer = 0
-    numbers = list(numbers)
-    per = []
+    global n, answer
 
-    for i in range(1, len(numbers) + 1):
-        per.extend(list(permutations(numbers, i)))
+    answer = set()
+    n = len(numbers)
+    visited = [False for _ in range(len(numbers))]
 
-    per = set(map(lambda x: int(''.join(x)), per))
+    per_num(0, numbers, visited, '')
+    return len(answer)
 
-    for value in per:
-        if is_prime(value):
-            answer += 1
-
-    return answer
+solution('17')
 
 # 정확성  테스트
 # 테스트 1 〉	통과 (0.06ms, 10.4MB)

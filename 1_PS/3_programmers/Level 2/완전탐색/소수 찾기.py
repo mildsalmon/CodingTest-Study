@@ -7,48 +7,26 @@ url     : https://programmers.co.kr/learn/courses/30/lessons/42839?language=pyth
 Author  : 김학진 (mildsalmon)
 Email   : mildsalmon@gamil.com
 """
-def is_prime(x):
-    if x <= 1:
-        return False
+from itertools import permutations
 
+
+def is_prime(x):
     for i in range(2, int(x ** 0.5) + 1):
         if x % i == 0:
             return False
     return True
 
 
-def per_num(depth, numbers, visited, number):
-    global n, answer
-
-    if depth == n:
-        print(number)
-        if number:
-            if int(number) in answer:
-                return
-            if is_prime(int(number)):
-                answer.add(int(number))
-        return
-
-    for i, value in enumerate(numbers):
-        if visited[i]:
-            per_num(depth + 1, numbers, visited, number)
-            continue
-        visited[i] = True
-        per_num(depth + 1, numbers, visited, number + value)
-        visited[i] = False
-
-
 def solution(numbers):
-    global n, answer
-
     answer = set()
-    n = len(numbers)
-    visited = [False for _ in range(len(numbers))]
 
-    per_num(0, numbers, visited, '')
+    for i in range(1, len(numbers) + 1):
+        answer |= set(map(lambda x: int(''.join(x)), permutations(list(numbers), i)))
+
+    answer -= set(range(0, 2))
+    answer -= set(map(lambda x: x if not is_prime(x) else None, answer))
+
     return len(answer)
-
-solution('17')
 
 # 정확성  테스트
 # 테스트 1 〉	통과 (0.06ms, 10.4MB)

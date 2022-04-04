@@ -10,32 +10,10 @@ Email   : mildsalmon@gamil.com
 
 
 def solution(numbers):
-    zeros = [number for number in numbers if number % 10 == 0]
-    others = [number for number in numbers if number % 10]
-
-    others = list(map(str, others))
-    zeros = list(map(str, zeros))
-
-    others.sort(reverse=True)
-
-    answer = ''.join(others)
-
-    zero_sort = [[], [], [], []]
-    for zero in zeros:
-        if zero == 0:
-            zero_sort[3].append(zero)
-        elif zero % 1000 == 0:
-            zero_sort[2].append(zero)
-        elif zero % 100 == 0:
-            zero_sort[1].append(zero)
-        elif zero % 10 == 0:
-            zero_sort[0].append(zero)
-
-    for i in range(4):
-        if zero_sort[i]:
-            zero_sort[i].sort(reverse=True)
-            answer += ''.join(map(str, zero_sort[i]))
-
+    numbers = list(map(str, numbers))
+    numbers.sort(key=lambda x: x*3, reverse=True)
+    answer = str(int(''.join(numbers)))
     return answer
 
-solution([6, 10, 2])
+print(solution([6, 10, 2, 0]))
+print(solution([0, 0, 0]))

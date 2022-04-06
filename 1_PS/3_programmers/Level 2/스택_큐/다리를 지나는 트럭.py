@@ -1,6 +1,6 @@
 """
 Date    : 2022.03.25
-Update  : 2022.03.27
+Update  : 2022.04.06
 Source  : 다리를 지나는 트럭.py
 Purpose : queue / stack
 url     : https://programmers.co.kr/learn/courses/30/lessons/42583

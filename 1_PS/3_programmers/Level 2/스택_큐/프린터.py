@@ -1,6 +1,6 @@
 """
 Date    : 2021.12.27
-Update  : 2021.12.27
+Update  : 2022.04.06
 Source  : 프린터.py
 Purpose : 큐로 풀었다. (any()를 활용하였다.)
 url     : https://programmers.co.kr/learn/courses/30/lessons/42587

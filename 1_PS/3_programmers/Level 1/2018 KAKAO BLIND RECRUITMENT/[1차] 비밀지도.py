@@ -24,7 +24,7 @@ def concat_map(arr1, arr2, n):
 
     for a, b in zip(arr1, arr2):
         temp = ''
-
+        # test
         for i in range(n):
             if a[i] == '0' and b[i] == '0':
                 temp += ' '

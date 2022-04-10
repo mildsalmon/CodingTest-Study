@@ -16,13 +16,13 @@ def solution(dartResult):
             'D': lambda x: x ** 2,
             'T': lambda x: x ** 3}
 
-    com = re.compile(r'\d+[SDT]+[#*]*')
-    dart = re.findall(com, dartResult)
+    com = re.compile(r'(\d+)([SDT]+)([#*]*)')
+    dart = com.findall(dartResult)
 
     for d in dart:
-        score = int(re.findall(r'\d+', d)[0])
-        bonus = re.findall(r'[SDT]+', d)[0]
-        option = re.findall(r'[#*]+', d)
+        score = int(d[0])
+        bonus = d[1]
+        option = d[2]
 
         score = oper[bonus](score)
 
